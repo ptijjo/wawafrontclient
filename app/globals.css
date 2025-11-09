@@ -1,0 +1,95 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+
+body {
+    min-height: 100dvh;
+    width: 100dvw;
+    max-width: 1280px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 auto;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+*,
+*::before,
+*::after {
+    min-width: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    list-style: none;
+
+}
+
+/* 🌐 AfroTouch Beauty - Liens de navigation */
+
+.nav-link {
+  position: relative;
+  color: #D4AF37; /* doré principal */
+  /* font-family: 'Poppins', sans-serif; */
+  /* font-weight: 500; */
+  /* letter-spacing: 0.5px; */
+  /* text-transform: uppercase; */
+  text-decoration: none;
+  transition: all 0.3s ease-in-out;
+  padding: 0.3rem 0;
+}
+
+/* Trait doré animé sous le lien */
+.nav-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 0%;
+  height: 1px;
+  background-color: #F5D76E; /* doré clair */
+  transition: width 0.3s ease-in-out;
+}
+
+/* Effet hover */
+.nav-link:hover {
+  color: #F5D76E;
+  text-shadow: 0 0 8px rgba(245, 215, 110, 0.4);
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+/* Lien actif (page en cours) */
+.nav-link.active {
+  color: #F5D76E;
+}
+
+.nav-link.active::after {
+  width: 100%;
+  background-color: #D4AF37;
+}
+
+
+p,
+span {
+    text-wrap: balance;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    text-wrap: balance;
+}
+
+img,
+video,
+svg {
+    display: block;
+    height: auto;
+    max-width: 100%;
+}
+
