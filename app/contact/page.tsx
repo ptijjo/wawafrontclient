@@ -1,28 +1,39 @@
 import { FaLocationDot } from "react-icons/fa6";
 import { BsFillTelephoneFill } from "react-icons/bs";
 import { CiClock2, CiMail } from "react-icons/ci";
+import ContactForm from './components/ContactForm';
 
 
 const Contact = () => {
     return (
-        <main className="flex flex-col grow items-center w-full justify-center bg-[#0A0A0A]">
-            <h1 className='text-[#D4AF37] text-2xl font-bold'>Nous contacter</h1>
-            <p>Vous avezdes questions? Envoyez-nous un message par le biais du formulaire ci-dessous.</p>
+        <main className="flex flex-col grow items-center w-full justify-center bg-[#0A0A0A] mt-15">
+            <h1 className='text-[#D4AF37] text-center text-7xl font-bold'>Nous contacter</h1>
+            <p className="text-[#EAEAEA] text-center mt-3.5">Vous avezdes questions? Envoyez-nous un message par le biais du formulaire ci-dessous.</p>
 
-            <section>
-                <div className="flex">
+            <section className="flex flex-col mt-36 w-full items-center gap-20 mb-20">
+                <div className="flex w-full flex-col md:flex-row justify-center md:justify-between px-3.5 md:px-20">
                     {/* Adresse */}
-                    <div className="flex flex-col gap-4 items-start justifify-center text-white">
+                    <div className="flex flex-col gap-4 items-start text-[#EAEAEA] text-2xl mb-6 md:mb-0">
                         <p className='flex gap-2.5 items-center'> <FaLocationDot className="text-[#D4AF37]" /> 123 rue du couscous</p>
                         <p className='flex gap-2.5 items-center'> <BsFillTelephoneFill className="text-[#D4AF37]" /> 01-82-75-98-63</p>
                         <p className=' flex gap-2.5 items-center'><CiMail className="text-[#D4AF37]" /> INFO@EXEMPLE.FR</p>
                         <p className='flex gap-2.5 items-center'> <CiClock2 className="text-[#D4AF37]" />LUN - SAM : 9H00 - 18H00</p>
                     </div>
-                    <form>
-                        
-                    </form>
+                    <ContactForm />
                 </div>
-                <div></div>
+                <div className="flex justify-center w-full px-3.5 md:px-20">
+                    {/* Carte Google Maps */}
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d10526.939742235407!2d3.1808874!3d48.6150919!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47ef35b72258e0a3%3A0xfe53fe2eb8392f92!2sChenoise%2C%2077160%20Chenoise-Cucharmoy!5e0!3m2!1sen!2sfr!4v1731080000000!5m2!1sen!2sfr"
+                        width="800"
+                        height="450"
+                        style={{ border: 0 }}
+                        allowFullScreen={false}
+                        loading="lazy"
+                        referrerPolicy="no-referrer-when-downgrade"
+                        className="rounded-lg"
+                    />
+                </div>
             </section>
         </main>
     )

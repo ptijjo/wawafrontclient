@@ -6,7 +6,7 @@ import NavLink from './NavLink';
 const Header = () => {
 
   return (
-    <header className='flex w-full items-center justify-between px-4 bg-[#0A0A0A] text-[#D4AF37] h-16'>
+    <header className='flex w-dvw max-w-[1560px] items-center justify-between px-4 bg-[#0A0A0A] text-[#D4AF37] h-16 fixed top-0 z-50'>
       <div>WavaBANGS</div>
       {/* MENU TABLETTE ET ORDI */}
       <nav className='hidden md:flex gap-8'>
