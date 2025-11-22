@@ -14,10 +14,10 @@ const Contact = () => {
                 <div className="flex w-full flex-col md:flex-row justify-center md:justify-between px-3.5 md:px-20">
                     {/* Adresse */}
                     <div className="flex flex-col gap-4 items-start text-[#EAEAEA] text-2xl mb-6 md:mb-0">
-                        <p className='flex gap-2.5 items-center'> <FaLocationDot className="text-[#D4AF37]" /> 123 rue du couscous</p>
-                        <p className='flex gap-2.5 items-center'> <BsFillTelephoneFill className="text-[#D4AF37]" /> 01-82-75-98-63</p>
+                        <p className='flex gap-2.5 items-center'> <FaLocationDot className="text-[#D4AF37]" /> 4 rue de Provins 77970 Jouy-Le-Châtel</p>
+                        <p className='flex gap-2.5 items-center'> <BsFillTelephoneFill className="text-[#D4AF37]" /> 07-49-42-29-24</p>
                         <p className=' flex gap-2.5 items-center'><CiMail className="text-[#D4AF37]" /> INFO@EXEMPLE.FR</p>
-                        <p className='flex gap-2.5 items-center'> <CiClock2 className="text-[#D4AF37]" />LUN - SAM : 9H00 - 18H00</p>
+                        <p className='flex gap-2.5 items-center'> <CiClock2 className="text-[#D4AF37]" />LUN - SAM : 9H00 - 12H00 / 14H00 - 18H00</p>
                     </div>
                     <ContactForm />
                 </div>
