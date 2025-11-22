@@ -1,4 +1,5 @@
-import { FaFacebookF,FaTwitter,FaInstagram } from "react-icons/fa";
+import { FaFacebookF, FaInstagram, FaTiktok } from "react-icons/fa";
+import Link from "next/link";
 
 const Footer = () => {
   return (
@@ -7,9 +8,15 @@ const Footer = () => {
         © 2024 Wava BANGS All rights reserved.
       </div>
       <div className="flex items-center justify-center gap-10">
-        <FaFacebookF size={24} />
-        <FaInstagram size={24}/>
-        <FaTwitter size={24}/>
+        <Link href="https://www.facebook.com/wava.bangs" target="_blank" rel="noopener noreferrer">
+          <FaFacebookF size={24} className="hover:scale-120 transition-transform duration-300 cursor-pointer" />
+        </Link>
+        <Link href="https://www.instagram.com/wavabangs/" target="_blank" rel="noopener noreferrer">
+          <FaInstagram size={24} className="hover:scale-120 transition-transform duration-300 cursor-pointer" />
+        </Link>
+        <Link href="https://www.tiktok.com/@amelie.wava.bangs?lang=fr" target="_blank" rel="noopener noreferrer">
+          <FaTiktok size={24} className="hover:scale-120 transition-transform duration-300 cursor-pointer" />
+        </Link>
       </div>
     </footer>
   )

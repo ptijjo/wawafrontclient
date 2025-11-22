@@ -24,7 +24,7 @@ const Contact = () => {
                 <div className="flex justify-center w-full px-3.5 md:px-20">
                     {/* Carte Google Maps */}
                     <iframe
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d10526.939742235407!2d3.1808874!3d48.6150919!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47ef35b72258e0a3%3A0xfe53fe2eb8392f92!2sChenoise%2C%2077160%20Chenoise-Cucharmoy!5e0!3m2!1sen!2sfr!4v1731080000000!5m2!1sen!2sfr"
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2637.5!2d3.0482!3d48.6827!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e5dcf9a8e9c9c9%3A0x9d9d9d9d9d9d9d9d!2s4%20Rue%20de%20Provins%2C%2077970%20Jouy-le-Ch%C3%A2tel!5e0!3m2!1sfr!2sfr!4v1732291200000!5m2!1sfr!2sfr"
                         width="800"
                         height="450"
                         style={{ border: 0 }}
