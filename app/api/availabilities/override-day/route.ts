@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
     // Créer les nouveaux slots
     const newSlotsDates = enumerateSlots(day, body.blocks);
     const data = newSlotsDates.map(d => ({ date: d }));
-    await prisma.availability.createMany({ data, skipDuplicates: true });
+    await prisma.availability.createMany({ data });
 
     const finalSlots = await prisma.availability.findMany({
       where: { date: { gte: day, lt: tomorrow } },

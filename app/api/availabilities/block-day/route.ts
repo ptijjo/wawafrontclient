@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
     if (existingSlots.length === 0) {
       // générer les slots si absents
       const slots = enumerateSlots(day, DEFAULT_BLOCKS).map(d => ({ date: d }));
-      await prisma.availability.createMany({ data: slots, skipDuplicates: true });
+      await prisma.availability.createMany({ data: slots });
     }
 
     await prisma.availability.updateMany({
