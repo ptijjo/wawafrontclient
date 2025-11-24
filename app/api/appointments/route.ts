@@ -42,7 +42,7 @@ export async function GET(request: NextRequest) {
       },
       include: {
         service: true,
-        availability: true,
+        availabilities: true,
       },
     });
 
