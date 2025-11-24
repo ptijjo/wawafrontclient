@@ -1,10 +1,17 @@
 import Mailjet from 'node-mailjet';
 
-// Configuration Mailjet
-const mailjet = new Mailjet({
-  apiKey: process.env.MAILJET_API_KEY || '',
-  apiSecret: process.env.MAILJET_SECRET_KEY || '',
-});
+// Configuration Mailjet - initialisation lazy pour éviter les erreurs au build
+let mailjetClient: Mailjet | null = null;
+
+function getMailjetClient(): Mailjet {
+  if (!mailjetClient) {
+    mailjetClient = new Mailjet({
+      apiKey: process.env.MAILJET_API_KEY || '',
+      apiSecret: process.env.MAILJET_SECRET_KEY || '',
+    });
+  }
+  return mailjetClient;
+}
 
 interface EmailOptions {
   to: string;
@@ -33,6 +40,7 @@ export async function sendEmail({
       };
     }
 
+    const mailjet = getMailjetClient();
     const request = mailjet.post('send', { version: 'v3.1' }).request({
       Messages: [
         {
