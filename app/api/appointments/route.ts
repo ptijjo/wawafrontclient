@@ -160,7 +160,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Créer le rendez-vous dans une transaction
-    const appointment = await prisma.$transaction(async (tx: typeof prisma) => {
+    const appointment = await prisma.$transaction(async (tx) => {
       const newAppt = await tx.appointment.create({
         data: {
           lastname,

@@ -91,7 +91,7 @@ export async function PATCH(
     // Pas de redimensionnement des slots dans cette version (multi-slots déjà occupés)
 
     // Mettre à jour le rendez-vous dans une transaction
-    const updatedAppointment = await prisma.$transaction(async (tx: typeof prisma) => {
+    const updatedAppointment = await prisma.$transaction(async (tx) => {
       const updated = await tx.appointment.update({
         where: { id },
         data: {
