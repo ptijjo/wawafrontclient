@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
@@ -19,7 +19,7 @@ enum ServiceType {
 
 // Exemple de modèle
 model User {
-  id                     String    @id @default(cuid())
+  id                     String    @id @default(auto()) @map("_id") @db.ObjectId
   email                  String    @unique
   password               String
   firstname              String
@@ -36,7 +36,7 @@ model User {
 }
 
 model LoginAttempt {
-  id        String   @id @default(cuid())
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
   email     String
   ipAddress String
   userAgent String
@@ -45,8 +45,8 @@ model LoginAttempt {
 }
 
 model loginHistory {
-  id        String   @id @default(cuid())
-  userId    String
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   ipAddress String
   userAgent String
@@ -54,8 +54,8 @@ model loginHistory {
 }
 
 model Session {
-  id        String    @id @default(cuid())
-  userId    String    @unique
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String    @unique @db.ObjectId
   user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userAgent String
   ipAddress String
@@ -72,7 +72,7 @@ model Session {
 // (ex : Tresses, Tatouage, Pose de cils ...)
 //
 model Service {
-  id          String      @id @default(cuid())
+  id          String      @id @default(auto()) @map("_id") @db.ObjectId
   service     ServiceType
   durationMin Int // durée du service en minutes (30, 45, 60…)
   price       Int?
@@ -86,13 +86,13 @@ model Service {
 // Chaque créneau défini par l'admin
 //
 model Availability {
-  id            String       @id @default(cuid())
+  id            String       @id @default(auto()) @map("_id") @db.ObjectId
   date          DateTime // date du créneau disponible
   isBooked      Boolean      @default(false)
   isBlocked     Boolean      @default(false) // true si bloqué pour vacances/indisponibilité
   blockedNote   String? // raison du blocage (vacances, événement, etc.)
   createdAt     DateTime     @default(now())
-  appointmentId String?
+  appointmentId String?      @db.ObjectId
   appointment   Appointment? @relation(fields: [appointmentId], references: [id], onDelete: SetNull)
 }
 
@@ -101,14 +101,14 @@ model Availability {
 //
 
 model Appointment {
-  id        String  @id @default(cuid())
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
   lastname  String // nom du client
   firstname String // prénom du client
   phone     String // téléphone
   email     String? // facultatif
   note      String? // optionnel, pour un message client
 
-  serviceId String
+  serviceId String  @db.ObjectId
   service   Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
 
   // Multi-slots: un rendez-vous occupe plusieurs Availability

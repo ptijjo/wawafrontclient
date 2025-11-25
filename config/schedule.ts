@@ -1,4 +1,4 @@
-export const SLOT_DURATION_MIN = 30;
+export const SLOT_DURATION_MIN = 60;
 
 export interface TimeBlock {
   start: string; // HH:MM

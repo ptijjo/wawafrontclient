@@ -6,6 +6,7 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { useEffect, useState } from 'react';
 import frLocale from '@fullcalendar/core/locales/fr';
+import { SLOT_DURATION_MIN } from '@/config/schedule';
 
 interface Availability {
     id: string;
@@ -86,18 +87,18 @@ export default function AvailabilityCalendar() {
                         i++; continue;
                     }
 
-                    // Slot réservé: regrouper les suivants contigus (30 min) appartenant au même rendez-vous
+                    // Slot réservé: regrouper les suivants contigus appartenant au même rendez-vous
                     const apptId = slot.appointment?.id || `appt-${slot.id}`;
-                    let end = new Date(slotDate.getTime() + 30 * 60000);
+                    let end = new Date(slotDate.getTime() + SLOT_DURATION_MIN * 60000);
                     let j = i + 1;
                     while (j < slots.length) {
                         const next = slots[j];
                         if (!next.isBooked) break;
                         if ((next.appointment?.id || `appt-${next.id}`) !== apptId) break;
                         const nextDate = new Date(next.date);
-                        const diffMin = (nextDate.getTime() - end.getTime() + 30 * 60000) / 60000; // simplified check
+                        const diffMin = (nextDate.getTime() - end.getTime() + SLOT_DURATION_MIN * 60000) / 60000; // simplified check
                         if (nextDate.getTime() === end.getTime()) {
-                            end = new Date(end.getTime() + 30 * 60000);
+                            end = new Date(end.getTime() + SLOT_DURATION_MIN * 60000);
                             j++;
                         } else {
                             break;
@@ -187,7 +188,7 @@ export default function AvailabilityCalendar() {
                     startTime: '09:00',
                     endTime: '19:00',
                 }}
-                slotDuration="00:30:00"
+                slotDuration={`00:${SLOT_DURATION_MIN.toString().padStart(2, '0')}:00`}
                 eventDisplay="block"
                 eventTimeFormat={{
                     hour: '2-digit',
