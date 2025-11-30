@@ -159,7 +159,7 @@ export default function AdminAppointmentsPage() {
 
     if (loading) {
         return (
-            <main className="flex flex-col grow items-center w-full justify-center bg-[#0A0A0A] mt-15">
+            <main className="flex flex-col grow items-center w-full justify-center bg-[#0A0A0A]">
                 <div className="text-[#D4AF37] text-xl">Chargement...</div>
             </main>
         );
@@ -170,25 +170,25 @@ export default function AdminAppointmentsPage() {
     }
 
     return (
-        <main className="flex flex-col grow items-center w-full bg-[#0A0A0A] mt-15">
+        <main className="flex flex-col grow items-center w-full bg-[#0A0A0A]">
             {/* Header */}
             <section className="bg-[#1a1a1a] border-b border-[#D4AF37]/20 sticky top-0 z-10 w-full">
-                <div className="container mx-auto px-4 py-4">
-                    <div className="flex justify-between items-center">
+                <div className="container mx-auto px-4 py-3 sm:py-4">
+                    <div className="flex flex-col sm:flex-row gap-3 sm:gap-0 justify-between items-start sm:items-center">
                         <button
                             onClick={() => router.push('/admin/dashboard')}
-                            className="flex items-center gap-2 bg-[#D4AF37]/10 hover:bg-[#D4AF37]/20 text-[#D4AF37] px-4 py-2 rounded-lg transition-colors border border-[#D4AF37]/30"
+                            className="flex items-center gap-2 bg-[#D4AF37]/10 hover:bg-[#D4AF37]/20 text-[#D4AF37] px-3 sm:px-4 py-2 rounded-lg transition-colors border border-[#D4AF37]/30 text-sm"
                         >
                             <span>←</span>
                             <span>Retour au dashboard</span>
                         </button>
-                        <div className="text-center">
-                            <h1 className="text-2xl font-bold text-[#D4AF37]">Gestion des Rendez-vous</h1>
-                            <p className="text-sm text-gray-400">{appointments.length} rendez-vous total</p>
+                        <div className="text-left sm:text-center">
+                            <h1 className="text-xl sm:text-2xl font-bold text-[#D4AF37]">Gestion des Rendez-vous</h1>
+                            <p className="text-xs sm:text-sm text-gray-400">{appointments.length} rendez-vous total</p>
                         </div>
                         <button
                             onClick={handleLogout}
-                            className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors text-sm"
+                            className="bg-red-600 hover:bg-red-700 text-white px-3 sm:px-4 py-2 rounded-lg transition-colors text-sm"
                         >
                             Déconnexion
                         </button>
@@ -197,17 +197,17 @@ export default function AdminAppointmentsPage() {
             </section>
 
             {/* Contenu principal */}
-            <section className="container mx-auto px-4 py-8">
+            <section className="container mx-auto px-4 py-6 sm:py-8 max-w-7xl">
                 {appointments.length === 0 ? (
-                    <div className="bg-[#1a1a1a] border border-[#D4AF37]/20 rounded-lg p-8 text-center">
+                    <div className="bg-[#1a1a1a] border border-[#D4AF37]/20 rounded-xl p-8 text-center shadow-[0_6px_20px_rgba(0,0,0,0.25)]">
                         <p className="text-gray-400 text-lg">Aucun rendez-vous pour le moment</p>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 gap-4">
+                    <div className="grid grid-cols-1 gap-4 sm:gap-6">
                         {appointments.map((appointment) => (
                             <div
                                 key={appointment.id}
-                                className="bg-[#1a1a1a] border border-[#D4AF37]/20 rounded-lg p-6 hover:border-[#D4AF37]/40 transition-colors cursor-pointer"
+                                className="bg-[#1a1a1a] border border-[#D4AF37]/20 rounded-xl p-5 sm:p-6 shadow-[0_6px_20px_rgba(0,0,0,0.25)] hover:border-[#D4AF37]/40 transition-colors cursor-pointer"
                                 onClick={() => setSelectedAppointment(appointment)}
                             >
                                 <div className="flex justify-between items-start">
@@ -265,7 +265,7 @@ export default function AdminAppointmentsPage() {
                                         </div>
 
                                         {appointment.note && (
-                                            <div className="mt-3 p-3 bg-[#0a0a0a] rounded border border-[#D4AF37]/10">
+                                            <div className="mt-3 p-3 bg-[#0a0a0a] rounded-lg border border-[#D4AF37]/10">
                                                 <p className="text-sm text-gray-500 mb-1">💬 Note du client</p>
                                                 <p className="text-gray-300">{appointment.note}</p>
                                             </div>
@@ -281,7 +281,7 @@ export default function AdminAppointmentsPage() {
                                             e.stopPropagation();
                                             handleDeleteAppointment(appointment.id);
                                         }}
-                                        className="ml-4 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors text-sm"
+                                        className="ml-4 px-3 sm:px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors text-sm"
                                     >
                                         Supprimer
                                     </button>
@@ -299,7 +299,7 @@ export default function AdminAppointmentsPage() {
                     onClick={() => setSelectedAppointment(null)}
                 >
                     <div
-                        className="bg-[#1a1a1a] border border-[#D4AF37]/20 rounded-lg p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+                        className="bg-[#1a1a1a] border border-[#D4AF37]/20 rounded-xl p-6 sm:p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-[0_6px_20px_rgba(0,0,0,0.35)]"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <div className="flex justify-between items-start mb-6">
@@ -376,7 +376,7 @@ export default function AdminAppointmentsPage() {
                             {selectedAppointment.note && (
                                 <div className="border-t border-[#D4AF37]/20 pt-4">
                                     <p className="text-sm text-gray-500 mb-2">Note du client</p>
-                                    <div className="bg-[#0a0a0a] rounded p-4 border border-[#D4AF37]/10">
+                                    <div className="bg-[#0a0a0a] rounded-lg p-4 border border-[#D4AF37]/10">
                                         <p className="text-white">{selectedAppointment.note}</p>
                                     </div>
                                 </div>

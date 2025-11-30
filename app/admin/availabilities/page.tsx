@@ -22,6 +22,9 @@ export default function AdminAvailabilitiesPage() {
     const [user, setUser] = useState<User | null>(null);
     const [availabilities, setAvailabilities] = useState<AvailabilityFromAPI[]>([]);
     const [loading, setLoading] = useState(true);
+    // Pagination state
+    const [page, setPage] = useState(1);
+    const [pageSize, setPageSize] = useState(24);
     const [showBlockModal, setShowBlockModal] = useState(false);
     const [blockDate, setBlockDate] = useState('');
     const [blockNote, setBlockNote] = useState('');
@@ -68,6 +71,11 @@ export default function AdminAvailabilitiesPage() {
     useEffect(() => {
         checkAuthAndFetchData();
     }, [checkAuthAndFetchData]);
+
+    // Reset to first page if dataset changes
+    useEffect(() => {
+        setPage(1);
+    }, [availabilities.length]);
 
     const handleGenerateSlots = async () => {
         if (!confirm('Générer automatiquement les créneaux pour les 3 prochains mois ?')) {
@@ -214,7 +222,7 @@ export default function AdminAvailabilitiesPage() {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-[#0a0a0a] via-[#1a1a1a] to-[#0a0a0a] flex items-center justify-center">
+            <div className="min-h-screen bg-linear-to-br from-[#0a0a0a] via-[#1a1a1a] to-[#0a0a0a] flex items-center justify-center">
                 <div className="text-[#D4AF37] text-xl">Chargement...</div>
             </div>
         );
@@ -228,28 +236,36 @@ export default function AdminAvailabilitiesPage() {
     const bookedCount = availabilities.filter(a => a.isBooked).length;
     const blockedCount = availabilities.filter(a => a.isBlocked).length;
 
+    // Compute pagination
+    const totalItems = availabilities.length;
+    const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
+    const currentPage = Math.min(page, totalPages);
+    const startIndex = (currentPage - 1) * pageSize;
+    const endIndex = Math.min(startIndex + pageSize, totalItems);
+    const pagedAvailabilities = availabilities.slice(startIndex, endIndex);
+
     return (
-        <main className="flex flex-col grow items-center w-full justify-center bg-[#0A0A0A] mt-15">
+        <main className="flex flex-col grow items-center w-full justify-center bg-[#0A0A0A]">
             {/* Header */}
             <section className="bg-[#1a1a1a] border-b border-[#D4AF37]/20 sticky top-0 z-10 w-full">
-                <div className="container mx-auto px-4 py-4">
-                    <div className="flex justify-between items-center">
+                <div className="container mx-auto px-4 py-3 sm:py-4">
+                    <div className="flex flex-col sm:flex-row gap-3 sm:gap-0 justify-between items-start sm:items-center">
                         <button
                             onClick={() => router.push('/admin/dashboard')}
-                            className="flex items-center gap-2 bg-[#D4AF37]/10 hover:bg-[#D4AF37]/20 text-[#D4AF37] px-4 py-2 rounded-lg transition-colors border border-[#D4AF37]/30"
+                            className="flex items-center gap-2 bg-[#D4AF37]/10 hover:bg-[#D4AF37]/20 text-[#D4AF37] px-3 sm:px-4 py-2 rounded-lg transition-colors border border-[#D4AF37]/30 text-sm"
                         >
                             <span>←</span>
                             <span>Retour au dashboard</span>
                         </button>
-                        <div className="text-center">
-                            <h1 className="text-2xl font-bold text-[#D4AF37]">Gestion des Disponibilités</h1>
-                            <p className="text-sm text-gray-400">
+                        <div className="text-left sm:text-center">
+                            <h1 className="text-xl sm:text-2xl font-bold text-[#D4AF37]">Gestion des Disponibilités</h1>
+                            <p className="text-xs sm:text-sm text-gray-400">
                                 {availableCount} disponibles • {bookedCount} réservés • {blockedCount} bloqués
                             </p>
                         </div>
                         <button
                             onClick={handleLogout}
-                            className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors text-sm"
+                            className="bg-red-600 hover:bg-red-700 text-white px-3 sm:px-4 py-2 rounded-lg transition-colors text-sm"
                         >
                             Déconnexion
                         </button>
@@ -258,28 +274,41 @@ export default function AdminAvailabilitiesPage() {
             </section>
 
             {/* Actions */}
-            <section className="container mx-auto px-4 py-6">
+            <section className="container mx-auto px-4 py-6 max-w-7xl">
                 <div className="flex gap-4 flex-wrap">
                     <button
                         onClick={handleGenerateSlots}
                         disabled={isGenerating}
-                        className="bg-[#D4AF37] hover:bg-[#B8941F] text-black font-semibold px-6 py-3 rounded-lg transition-colors disabled:opacity-50"
+                        className="bg-[#D4AF37] hover:bg-[#B8941F] text-black font-semibold px-6 py-3 rounded-lg transition-colors disabled:opacity-50 shadow-[0_6px_20px_rgba(0,0,0,0.25)]"
                     >
                         {isGenerating ? 'Génération...' : '✨ Générer des créneaux'}
                     </button>
                     <button
                         onClick={() => setShowBlockModal(true)}
-                        className="bg-gray-700 hover:bg-gray-600 text-white font-semibold px-6 py-3 rounded-lg transition-colors"
+                        className="bg-gray-700 hover:bg-gray-600 text-white font-semibold px-6 py-3 rounded-lg transition-colors shadow-[0_6px_20px_rgba(0,0,0,0.2)]"
                     >
                         🚫 Bloquer une journée
                     </button>
+                    <div className="flex items-center gap-2 ml-auto">
+                        <label className="text-xs text-gray-400">Par page</label>
+                        <select
+                            value={pageSize}
+                            onChange={(e) => setPageSize(Number(e.target.value))}
+                            className="px-3 py-2 bg-[#0a0a0a] border border-[#D4AF37]/30 rounded-lg text-white text-sm"
+                        >
+                            <option value={12}>12</option>
+                            <option value={24}>24</option>
+                            <option value={36}>36</option>
+                            <option value={48}>48</option>
+                        </select>
+                    </div>
                 </div>
             </section>
 
             {/* Liste des disponibilités */}
-            <section className="container mx-auto px-4 pb-8">
+            <section className="container mx-auto px-4 pb-8 max-w-7xl">
                 {availabilities.length === 0 ? (
-                    <div className="bg-[#1a1a1a] border border-[#D4AF37]/20 rounded-lg p-8 text-center">
+                    <div className="bg-[#1a1a1a] border border-[#D4AF37]/20 rounded-xl p-8 text-center shadow-[0_6px_20px_rgba(0,0,0,0.25)]">
                         <p className="text-gray-400 text-lg mb-4">Aucune disponibilité</p>
                         <button
                             onClick={handleGenerateSlots}
@@ -289,57 +318,83 @@ export default function AdminAvailabilitiesPage() {
                         </button>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                        {availabilities.map((availability) => (
-                            <div
-                                key={availability.id}
-                                className="bg-[#1a1a1a] border border-[#D4AF37]/20 rounded-lg p-4 hover:border-[#D4AF37]/40 transition-colors"
-                            >
-                                <div className="flex justify-between items-start mb-3">
-                                    <div>
-                                        <p className="text-white font-medium">{formatDate(availability.date)}</p>
-                                        <p className="text-[#D4AF37] text-lg font-bold">{formatTime(availability.date)}</p>
+                    <>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+                            {pagedAvailabilities.map((availability) => (
+                                <div
+                                    key={availability.id}
+                                    className="bg-[#1a1a1a] border border-[#D4AF37]/20 rounded-xl p-4 shadow-[0_6px_20px_rgba(0,0,0,0.25)] hover:border-[#D4AF37]/40 transition-colors"
+                                >
+                                    <div className="flex justify-between items-start mb-3">
+                                        <div>
+                                            <p className="text-white font-medium">{formatDate(availability.date)}</p>
+                                            <p className="text-[#D4AF37] text-lg font-bold">{formatTime(availability.date)}</p>
+                                        </div>
+                                        {getStatusBadge(availability)}
                                     </div>
-                                    {getStatusBadge(availability)}
-                                </div>
 
-                                {availability.isBlocked && availability.blockedNote && (
-                                    <div className="mb-3 p-2 bg-[#0a0a0a] rounded border border-gray-700">
-                                        <p className="text-xs text-gray-500 mb-1">Raison</p>
-                                        <p className="text-gray-300 text-sm">{availability.blockedNote}</p>
-                                    </div>
-                                )}
-
-                                {availability.appointment && (
-                                    <div className="mb-3 p-2 bg-[#0a0a0a] rounded border border-orange-900">
-                                        <p className="text-xs text-gray-500 mb-1">Réservé par</p>
-                                        <p className="text-orange-300 text-sm">
-                                            {availability.appointment.firstname} {availability.appointment.lastname}
-                                        </p>
-                                    </div>
-                                )}
-
-                                <div className="flex gap-2">
-                                    {availability.isBlocked && (
-                                        <button
-                                            onClick={() => handleUnblock(availability.id)}
-                                            className="flex-1 bg-green-600 hover:bg-green-700 text-white text-xs py-2 px-3 rounded transition-colors"
-                                        >
-                                            Débloquer
-                                        </button>
+                                    {availability.isBlocked && availability.blockedNote && (
+                                        <div className="mb-3 p-2 bg-[#0a0a0a] rounded-lg border border-gray-700">
+                                            <p className="text-xs text-gray-500 mb-1">Raison</p>
+                                            <p className="text-gray-300 text-sm">{availability.blockedNote}</p>
+                                        </div>
                                     )}
-                                    {!availability.isBooked && (
-                                        <button
-                                            onClick={() => handleDeleteAvailability(availability.id)}
-                                            className="flex-1 bg-red-600 hover:bg-red-700 text-white text-xs py-2 px-3 rounded transition-colors"
-                                        >
-                                            Supprimer
-                                        </button>
+
+                                    {availability.appointment && (
+                                        <div className="mb-3 p-2 bg-[#0a0a0a] rounded-lg border border-orange-900">
+                                            <p className="text-xs text-gray-500 mb-1">Réservé par</p>
+                                            <p className="text-orange-300 text-sm">
+                                                {availability.appointment.firstname} {availability.appointment.lastname}
+                                            </p>
+                                        </div>
                                     )}
+
+                                    <div className="flex gap-2">
+                                        {availability.isBlocked && (
+                                            <button
+                                                onClick={() => handleUnblock(availability.id)}
+                                                className="flex-1 bg-green-600 hover:bg-green-700 text-white text-xs py-2 px-3 rounded transition-colors"
+                                            >
+                                                Débloquer
+                                            </button>
+                                        )}
+                                        {!availability.isBooked && (
+                                            <button
+                                                onClick={() => handleDeleteAvailability(availability.id)}
+                                                className="flex-1 bg-red-600 hover:bg-red-700 text-white text-xs py-2 px-3 rounded transition-colors"
+                                            >
+                                                Supprimer
+                                            </button>
+                                        )}
+                                    </div>
                                 </div>
+                            ))}
+                        </div>
+                        <div className="flex items-center justify-between mt-6">
+                            <div className="text-xs sm:text-sm text-gray-400">
+                                Affichage {startIndex + 1}–{endIndex} sur {totalItems}
                             </div>
-                        ))}
-                    </div>
+                            <div className="flex items-center gap-2">
+                                <button
+                                    onClick={() => setPage(p => Math.max(1, p - 1))}
+                                    disabled={currentPage === 1}
+                                    className="px-3 py-2 rounded-lg border border-[#D4AF37]/30 text-[#D4AF37] bg-[#0a0a0a] disabled:opacity-40"
+                                >
+                                    ← Précédent
+                                </button>
+                                <span className="text-xs sm:text-sm text-gray-400">
+                                    Page {currentPage} / {totalPages}
+                                </span>
+                                <button
+                                    onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                                    disabled={currentPage === totalPages}
+                                    className="px-3 py-2 rounded-lg border border-[#D4AF37]/30 text-[#D4AF37] bg-[#0a0a0a] disabled:opacity-40"
+                                >
+                                    Suivant →
+                                </button>
+                            </div>
+                        </div>
+                    </>
                 )}
             </section>
 
@@ -350,7 +405,7 @@ export default function AdminAvailabilitiesPage() {
                     onClick={() => setShowBlockModal(false)}
                 >
                     <div
-                        className="bg-[#1a1a1a] border border-[#D4AF37]/20 rounded-lg p-8 max-w-md w-full"
+                        className="bg-[#1a1a1a] border border-[#D4AF37]/20 rounded-xl p-6 sm:p-8 max-w-md w-full shadow-[0_6px_20px_rgba(0,0,0,0.35)]"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <h2 className="text-2xl font-bold text-[#D4AF37] mb-6">Bloquer une journée</h2>

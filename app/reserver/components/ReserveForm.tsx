@@ -36,10 +36,10 @@ const ReserveForm = () => {
     ]
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-2xl bg-black/50 p-8 rounded-lg">
-            <h2 className="text-[#D4AF37] text-3xl font-bold mb-6 text-center">Réserver un rendez-vous</h2>
+        <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-xl sm:max-w-2xl bg-black/50 p-6 sm:p-8 rounded-lg">
+            <h2 className="text-[#D4AF37] text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 text-center">Réserver un rendez-vous</h2>
 
-            <div className="grid md:grid-cols-2 gap-6 mb-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-6">
                 {/* Nom */}
                 <div>
                     <label className="block text-[#EAEAEA] mb-2">Nom *</label>
@@ -63,7 +63,7 @@ const ReserveForm = () => {
                 </div>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-6 mb-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-6">
                 {/* Email */}
                 <div>
                     <label className="block text-[#EAEAEA] mb-2">Email *</label>
@@ -116,7 +116,7 @@ const ReserveForm = () => {
                 {errors.prestation && <p className="text-red-500 text-sm mt-1">{errors.prestation.message}</p>}
             </div>
 
-            <div className="grid md:grid-cols-2 gap-6 mb-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-6">
                 {/* Date */}
                 <div>
                     <label className="block text-[#EAEAEA] mb-2">Date *</label>
@@ -154,7 +154,7 @@ const ReserveForm = () => {
             {/* Bouton */}
             <button
                 type="submit"
-                className="w-full bg-[#D4AF37] text-black font-bold py-3 px-6 rounded hover:bg-[#B8941F] transition-all duration-300"
+                className="w-full bg-[#D4AF37] text:black font-bold py-3 px-6 rounded hover:bg-[#B8941F] transition-all duration-300"
             >
                 Réserver maintenant
             </button>

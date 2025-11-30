@@ -74,7 +74,7 @@ export default function AdminDashboard() {
 
     if (loading) {
         return (
-            <main className="flex flex-col grow items-center w-full justify-center bg-[#0A0A0A] mt-15">
+            <main className="flex flex-col grow items-center w-full justify-center bg-[#0A0A0A]">
                 <div className="text-[#D4AF37] text-xl">Chargement...</div>
             </main>
         );
@@ -85,17 +85,17 @@ export default function AdminDashboard() {
     }
 
     return (
-        <main className="flex flex-col grow items-center w-full bg-[#0A0A0A] mt-15">
+        <main className="flex flex-col grow items-center w-full bg-[#0A0A0A]">
             {/* Header */}
             <section className="bg-[#1a1a1a] border-b border-[#D4AF37]/20 w-full">
-                <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+                <div className="container mx-auto px-4 py-4 flex flex-col sm:flex-row gap-3 sm:gap-0 justify-between items-start sm:items-center">
                     <div>
-                        <h1 className="text-2xl font-bold text-[#D4AF37]">Dashboard Admin</h1>
-                        <p className="text-sm text-gray-400">
+                        <h1 className="text-xl sm:text-2xl font-bold text-[#D4AF37]">Dashboard Admin</h1>
+                        <p className="text-xs sm:text-sm text-gray-400">
                             Bienvenue, {user.firstname} {user.lastname}
                         </p>
                     </div>
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-3 sm:gap-4">
                         {/* Notification cloche */}
                         <button
                             onClick={() => router.push('/admin/appointments')}
@@ -103,7 +103,7 @@ export default function AdminDashboard() {
                             title="Nouveaux rendez-vous"
                         >
                             <svg
-                                className="w-6 h-6 text-[#D4AF37]"
+                                className="w-5 h-5 sm:w-6 sm:h-6 text-[#D4AF37]"
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -123,7 +123,7 @@ export default function AdminDashboard() {
                         </button>
                         <button
                             onClick={handleLogout}
-                            className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors"
+                            className="bg-red-600 hover:bg-red-700 text-white px-3 sm:px-4 py-2 rounded-lg transition-colors text-sm"
                         >
                             Déconnexion
                         </button>
@@ -132,39 +132,39 @@ export default function AdminDashboard() {
             </section>
 
             {/* Contenu principal */}
-            <section className="container mx-auto px-4 py-8">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <section className="container mx-auto px-4 py-6 sm:py-8 max-w-7xl">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                     {/* Card Rendez-vous */}
-                    <div className="bg-[#1a1a1a] border border-[#D4AF37]/20 rounded-lg p-6">
+                    <div className="bg-[#1a1a1a] border border-[#D4AF37]/20 rounded-xl p-5 sm:p-6 shadow-[0_6px_20px_rgba(0,0,0,0.25)]">
                         <h2 className="text-xl font-semibold text-[#D4AF37] mb-2">Rendez-vous</h2>
                         <p className="text-gray-400 mb-4">Gérer les rendez-vous clients</p>
                         <a
                             href="/admin/appointments"
-                            className="inline-block bg-[#D4AF37] hover:bg-[#B8941F] text-black font-semibold px-4 py-2 rounded transition-colors"
+                            className="inline-block bg-[#D4AF37] hover:bg-[#B8941F] text-black font-semibold px-4 py-2 rounded-lg transition-colors"
                         >
                             Accéder
                         </a>
                     </div>
 
                     {/* Card Disponibilités */}
-                    <div className="bg-[#1a1a1a] border border-[#D4AF37]/20 rounded-lg p-6">
+                    <div className="bg-[#1a1a1a] border border-[#D4AF37]/20 rounded-xl p-5 sm:p-6 shadow-[0_6px_20px_rgba(0,0,0,0.25)]">
                         <h2 className="text-xl font-semibold text-[#D4AF37] mb-2">Disponibilités</h2>
                         <p className="text-gray-400 mb-4">Gérer les créneaux horaires</p>
                         <a
                             href="/admin/availabilities"
-                            className="inline-block bg-[#D4AF37] hover:bg-[#B8941F] text-black font-semibold px-4 py-2 rounded transition-colors"
+                            className="inline-block bg-[#D4AF37] hover:bg-[#B8941F] text-black font-semibold px-4 py-2 rounded-lg transition-colors"
                         >
                             Accéder
                         </a>
                     </div>
 
                     {/* Card Services */}
-                    <div className="bg-[#1a1a1a] border border-[#D4AF37]/20 rounded-lg p-6">
+                    <div className="bg-[#1a1a1a] border border-[#D4AF37]/20 rounded-xl p-5 sm:p-6 shadow-[0_6px_20px_rgba(0,0,0,0.25)]">
                         <h2 className="text-xl font-semibold text-[#D4AF37] mb-2">Services</h2>
                         <p className="text-gray-400 mb-4">Gérer les services proposés</p>
                         <a
                             href="/admin/services"
-                            className="inline-block bg-[#D4AF37] hover:bg-[#B8941F] text-black font-semibold px-4 py-2 rounded transition-colors"
+                            className="inline-block bg-[#D4AF37] hover:bg-[#B8941F] text-black font-semibold px-4 py-2 rounded-lg transition-colors"
                         >
                             Accéder
                         </a>
@@ -172,9 +172,9 @@ export default function AdminDashboard() {
                 </div>
 
                 {/* Info utilisateur */}
-                <div className="mt-8 bg-[#1a1a1a] border border-[#D4AF37]/20 rounded-lg p-6">
+                <div className="mt-6 sm:mt-8 bg-[#1a1a1a] border border-[#D4AF37]/20 rounded-xl p-5 sm:p-6 max-w-7xl shadow-[0_6px_20px_rgba(0,0,0,0.25)]">
                     <h2 className="text-xl font-semibold text-[#D4AF37] mb-4">Informations du compte</h2>
-                    <div className="space-y-2 text-gray-300">
+                    <div className="space-y-1.5 sm:space-y-2 text-gray-300 text-sm sm:text-base">
                         <p><span className="font-semibold">Email:</span> {user.email}</p>
                         <p><span className="font-semibold">Nom:</span> {user.firstname} {user.lastname}</p>
                         <p><span className="font-semibold">ID:</span> {user.id}</p>
