@@ -21,14 +21,23 @@ export default function Home() {
     "/caroussel/IMG_8415.JPEG",
   ];
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(false);
 
   useEffect(() => {
     if (!carouselImages.length) return;
     const intervalId = setInterval(() => {
-      setCurrentImageIndex((prev) => (prev + 1) % carouselImages.length);
+      setIsAnimating(true);
     }, 3500);
 
-    return () => clearInterval(intervalId);
+    const updateId = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % carouselImages.length);
+      setIsAnimating(false);
+    }, 3500);
+
+    return () => {
+      clearInterval(intervalId);
+      clearInterval(updateId);
+    };
   }, [carouselImages.length]);
 
   const totalImages = carouselImages.length;
@@ -119,13 +128,13 @@ export default function Home() {
             <div className="relative h-40 sm:h-64 overflow-hidden rounded-xl border border-[#1F1F1F] bg-[#111] flex items-center justify-center opacity-80">
               {totalImages > 0 ? (
                 <Image
-                  key={`prev-${carouselImages[prevIndex]}`}
+                  key={`prev-${currentImageIndex}`}
                   src={carouselImages[prevIndex]}
                   alt="Création précédente WavaBANGS"
                   fill
                   sizes="33vw"
                   priority
-                  className="object-contain object-center transition-all duration-700 ease-in-out"
+                  className={`object-contain object-center ${isAnimating ? 'carousel-prev' : ''}`}
                 />
               ) : (
                 <div className="flex h-full w-full items-center justify-center text-gray-400 text-sm">
@@ -140,13 +149,13 @@ export default function Home() {
                             shadow-[0_10px_40px_rgba(0,0,0,0.35)] flex items-center justify-center">
               {totalImages > 0 ? (
                 <Image
-                  key={`current-${carouselImages[currentImageIndex]}`}
+                  key={`current-${currentImageIndex}`}
                   src={carouselImages[currentImageIndex]}
                   alt="Création WavaBANGS"
                   fill
                   sizes="60vw"
                   priority
-                  className="object-contain object-center transition-all duration-1000 ease-in-out"
+                  className={`object-contain object-center ${isAnimating ? 'carousel-current' : ''}`}
                 />
               ) : (
                 <div className="flex h-full w-full items-center justify-center text-gray-400 text-sm">
@@ -160,13 +169,13 @@ export default function Home() {
             <div className="relative h-40 sm:h-64 overflow-hidden rounded-xl border border-[#1F1F1F] bg-[#111] flex items-center justify-center opacity-80">
               {totalImages > 0 ? (
                 <Image
-                  key={`next-${carouselImages[nextIndex]}`}
+                  key={`next-${currentImageIndex}`}
                   src={carouselImages[nextIndex]}
                   alt="Création suivante WavaBANGS"
                   fill
                   sizes="33vw"
                   priority
-                  className="object-contain object-center transition-all duration-700 ease-in-out"
+                  className={`object-contain object-center ${isAnimating ? 'carousel-next' : ''}`}
                 />
               ) : (
                 <div className="flex h-full w-full items-center justify-center text-gray-400 text-sm">
