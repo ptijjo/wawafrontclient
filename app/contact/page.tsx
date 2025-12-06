@@ -14,9 +14,9 @@ const Contact = () => {
                 <div className="flex w-full flex-col md:flex-row justify-center md:justify-between px-4 md:px-20">
                     {/* Adresse */}
                     <div className="flex flex-col gap-4 items-start text-[#EAEAEA] text-2xl mb-6 md:mb-0">
-                        <p className='flex gap-2.5 items-center'> <FaLocationDot className="text-[#D4AF37]" /> 4 rue de Provins 77970 Jouy-Le-Châtel</p>
+                        <p className='flex gap-2.5 items-center'> <FaLocationDot className="text-[#D4AF37]" /> 30 rue de la forêt 77160 Chenoise Cucharmoy</p>
                         <p className='flex gap-2.5 items-center'> <BsFillTelephoneFill className="text-[#D4AF37]" /> 07-49-42-29-24</p>
-                        <p className=' flex gap-2.5 items-center'><CiMail className="text-[#D4AF37]" /> INFO@EXEMPLE.FR</p>
+                        <p className=' flex gap-2.5 items-center'><CiMail className="text-[#D4AF37]" /> wava05@outlook.fr</p>
                         <p className='flex gap-2.5 items-center'> <CiClock2 className="text-[#D4AF37]" />LUN - SAM : 9H00 - 12H00 / 14H00 - 18H00</p>
                     </div>
                     <ContactForm />
@@ -25,7 +25,7 @@ const Contact = () => {
                     {/* Carte Google Maps */}
                     <div className="w-full max-w-4xl aspect-video">
                         <iframe
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2637.5!2d3.0482!3d48.6827!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e5dcf9a8e9c9c9%3A0x9d9d9d9d9d9d9d9d!2s4%20Rue%20de%20Provins%2C%2077970%20Jouy-le-Ch%C3%A2tel!5e0!3m2!1sfr!2sfr!4v1732291200000!5m2!1sfr!2sfr"
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2625.8!2d3.0482!3d48.6827!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e5daa4e5e5e5e5%3A0x5e5e5e5e5e5e5e5e!2s30%20Rue%20de%20la%20For%C3%AAt%2C%2077160%20Chenoise-Cucharmoy!5e0!3m2!1sfr!2sfr!4v1733500000000!5m2!1sfr!2sfr"
                             width="100%"
                             height="100%"
                             style={{ border: 0 }}

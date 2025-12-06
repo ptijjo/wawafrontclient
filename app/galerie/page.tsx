@@ -23,7 +23,7 @@ const Galerie = () => {
             id: 'cils',
             title: 'Cils',
             description: 'Nos extensions de cils',
-            image: '/images/image1.png'
+            image: '/galerie/cils/IMG_6112.JPEG'
         }
     ]
 
