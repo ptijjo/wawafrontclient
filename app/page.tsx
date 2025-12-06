@@ -1,10 +1,40 @@
 "use client"
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
 
 export default function Home() {
   const router = useRouter();
+  const carouselImages = [
+    "/caroussel/0b83f5db-118f-4af0-ac11-4a847e7cc7f7.jpg",
+    "/caroussel/IMG_1847.JPEG",
+    "/caroussel/IMG_2011.JPEG",
+    "/caroussel/IMG_3963.JPEG",
+    "/caroussel/IMG_4436.JPEG",
+    "/caroussel/IMG_4807.JPEG",
+    "/caroussel/IMG_4810.JPEG",
+    "/caroussel/IMG_5076.JPG",
+    "/caroussel/IMG_5287.JPEG",
+    "/caroussel/IMG_7031.JPEG",
+    "/caroussel/IMG_7158.JPEG",
+    "/caroussel/IMG_8415.JPEG",
+  ];
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  useEffect(() => {
+    if (!carouselImages.length) return;
+    const intervalId = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % carouselImages.length);
+    }, 3500);
+
+    return () => clearInterval(intervalId);
+  }, [carouselImages.length]);
+
+  const totalImages = carouselImages.length;
+  const prevIndex = totalImages ? (currentImageIndex - 1 + totalImages) % totalImages : 0;
+  const nextIndex = totalImages ? (currentImageIndex + 1) % totalImages : 0;
+
   return (
     <main className="flex flex-col grow items-center w-full justify-center bg-[#0A0A0A]">
 
@@ -74,6 +104,80 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Carrousel créations */}
+      <section className="w-full bg-linear-to-b from-black via-[#0A0A0A] to-black py-16 px-4 sm:px-8 md:px-20">
+        <div className="max-w-6xl mx-auto flex flex-col gap-8">
+          <div className="flex items-center justify-center w-full">
+            <div className="text-center">
+              {/* <p className="text-sm uppercase tracking-[0.3em] text-gray-400">Nos réalisations</p> */}
+              <h2 className="text-[#D4AF37] text-2xl sm:text-3xl md:text-4xl font-bold">Quelques créations signées WavaBANGS</h2>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-[1fr_1.6fr_1fr] gap-4 sm:gap-6 items-center">
+            {/* Image précédente (miniature) */}
+            <div className="relative h-40 sm:h-64 overflow-hidden rounded-xl border border-[#1F1F1F] bg-[#111] flex items-center justify-center opacity-80">
+              {totalImages > 0 ? (
+                <Image
+                  key={`prev-${carouselImages[prevIndex]}`}
+                  src={carouselImages[prevIndex]}
+                  alt="Création précédente WavaBANGS"
+                  fill
+                  sizes="33vw"
+                  priority
+                  className="object-contain object-center transition-all duration-700 ease-in-out"
+                />
+              ) : (
+                <div className="flex h-full w-full items-center justify-center text-gray-400 text-sm">
+                  Aucune image disponible.
+                </div>
+              )}
+              <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-black/20 via-black/10 to-transparent" />
+            </div>
+
+            {/* Image active (grande) */}
+            <div className="relative h-[220px] sm:h-80 md:h-[420px] overflow-hidden rounded-2xl border border-[#1F1F1F] bg-[#111]
+                            shadow-[0_10px_40px_rgba(0,0,0,0.35)] flex items-center justify-center">
+              {totalImages > 0 ? (
+                <Image
+                  key={`current-${carouselImages[currentImageIndex]}`}
+                  src={carouselImages[currentImageIndex]}
+                  alt="Création WavaBANGS"
+                  fill
+                  sizes="60vw"
+                  priority
+                  className="object-contain object-center transition-all duration-1000 ease-in-out"
+                />
+              ) : (
+                <div className="flex h-full w-full items-center justify-center text-gray-400 text-sm">
+                  Aucune image disponible pour le moment.
+                </div>
+              )}
+              <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-black/40 via-black/10 to-transparent" />
+            </div>
+
+            {/* Image suivante (miniature) */}
+            <div className="relative h-40 sm:h-64 overflow-hidden rounded-xl border border-[#1F1F1F] bg-[#111] flex items-center justify-center opacity-80">
+              {totalImages > 0 ? (
+                <Image
+                  key={`next-${carouselImages[nextIndex]}`}
+                  src={carouselImages[nextIndex]}
+                  alt="Création suivante WavaBANGS"
+                  fill
+                  sizes="33vw"
+                  priority
+                  className="object-contain object-center transition-all duration-700 ease-in-out"
+                />
+              ) : (
+                <div className="flex h-full w-full items-center justify-center text-gray-400 text-sm">
+                  Aucune image disponible.
+                </div>
+              )}
+              <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-black/20 via-black/10 to-transparent" />
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Avis des clients */}
       <section>
