@@ -54,26 +54,27 @@ export async function GET(request: NextRequest) {
     const isBooked = searchParams.get('isBooked');
     const isBlocked = searchParams.get('isBlocked');
     const fromDate = searchParams.get('fromDate');
-    const autofill = searchParams.get('autofill'); // "1" pour déclencher génération
+    const autofill = searchParams.get('autofill'); // "1" pour déclencher génération (authentification requise)
     const months = parseInt(searchParams.get('months') || '3', 10); // défaut 3 mois
     const page = Math.max(1, parseInt(searchParams.get('page') || '1', 10));
     const pageSize = Math.min(500, Math.max(1, parseInt(searchParams.get('pageSize') || '100', 10))); // limite sécurité
 
+    // Vérifier l'authentification si autofill est demandé
+    if (autofill === '1') {
+      const auth = await requireAuth(request);
+      if (!auth.success) {
+        return auth.response;
+      }
+    }
+
     let autofillResult: { created: number; startDate: Date; endDate: Date } | undefined;
     if (autofill === '1') {
-      // Optimisation: ne remplir que si aucun créneau existant dans la plage ciblée
+      // Génération des créneaux pour les mois demandés
       const startBoundary = fromDate ? new Date(fromDate) : new Date();
       startBoundary.setHours(0,0,0,0);
       const endBoundary = new Date(startBoundary);
       endBoundary.setMonth(endBoundary.getMonth() + months);
-      const existingCount = await prisma.availability.count({
-        where: {
-          date: { gte: startBoundary, lt: endBoundary },
-        },
-      });
-      if (existingCount === 0) {
-        autofillResult = await autoFillAvailability(months, startBoundary);
-      }
+      autofillResult = await autoFillAvailability(months, startBoundary);
     }
 
     // Construction des filtres

@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 
-import React from 'react'
+import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 type ReservationFormData = {
@@ -15,29 +16,57 @@ type ReservationFormData = {
 }
 
 const ReserveForm = () => {
-    const { register, handleSubmit, formState: { errors } } = useForm<ReservationFormData>()
+    const { register, handleSubmit, formState: { errors }, reset } = useForm<ReservationFormData>()
+    const [isLoading, setIsLoading] = useState(false)
+    const [successMessage, setSuccessMessage] = useState('')
+    const [errorMessage, setErrorMessage] = useState('')
 
     const onSubmit = (data: ReservationFormData) => {
         console.log(data)
-        // Logique de soumission du formulaire
+        // À compléter manuellement
     }
 
     const prestations = [
-        "Coupe homme",
-        "Coupe femme",
-        "Coloration",
-        "Décoloration",
-        "Brushing",
-        "Lissage brésilien",
-        "Tatouage",
-        "Soins du visage",
-        "Soins des cheveux",
-        "Autre"
+        // COIFFURE
+        "Braids",
+        "Cornrows braids/Stich braids",
+        "Crochet braids",
+        "Fausses locks",
+        "Locks",
+        "Passion twists",
+        "Patras/Gros bébé",
+        "Wings",
+        "Tissage",
+        "Vanilles",
+        // TATOUAGES
+
+        "Couverture",
+        // PIERCING
+
+        // CILS
+        "Dépose complète",
+        "Mixte",
+        "Pose cils à cils",
+        "Extensions cils volume russe - Naturel",
+        "Extensions cils volume russe - Moyen",
+        "Extensions cils volume russe - Très fourni",
     ]
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-xl sm:max-w-2xl bg-black/50 p-6 sm:p-8 rounded-lg">
             <h2 className="text-[#D4AF37] text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 text-center">Réserver un rendez-vous</h2>
+
+            {/* Messages de succès/erreur */}
+            {successMessage && (
+                <div className="mb-6 p-4 bg-green-900/30 border border-green-500 rounded-lg text-green-400 text-center">
+                    {successMessage}
+                </div>
+            )}
+            {errorMessage && (
+                <div className="mb-6 p-4 bg-red-900/30 border border-red-500 rounded-lg text-red-400 text-center">
+                    {errorMessage}
+                </div>
+            )}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-6">
                 {/* Nom */}
@@ -154,9 +183,10 @@ const ReserveForm = () => {
             {/* Bouton */}
             <button
                 type="submit"
-                className="w-full bg-[#D4AF37] text:black font-bold py-3 px-6 rounded hover:bg-[#B8941F] transition-all duration-300"
+                disabled={isLoading}
+                className="w-full bg-[#D4AF37] text-black font-bold py-3 px-6 rounded hover:bg-[#B8941F] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-                Réserver maintenant
+                {isLoading ? 'Réservation en cours...' : 'Réserver maintenant'}
             </button>
         </form>
     )

@@ -43,8 +43,8 @@ export default function AvailabilityCalendar() {
     const fetchAvailabilities = async () => {
         try {
             setLoading(true);
-            // Récupère un lot large (pagination) + possibilité de génération
-            const response = await fetch('/api/availabilities?page=1&pageSize=200&autofill=1');
+            // Récupère un lot large (pagination) - sans autofill pour les clients
+            const response = await fetch('/api/availabilities?page=1&pageSize=500');
             const data = await response.json();
 
             if (data.success) {

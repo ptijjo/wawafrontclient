@@ -29,6 +29,9 @@ export default function AdminAvailabilitiesPage() {
     const [blockDate, setBlockDate] = useState('');
     const [blockNote, setBlockNote] = useState('');
     const [isGenerating, setIsGenerating] = useState(false);
+    const [showGenerateModal, setShowGenerateModal] = useState(false);
+    const [generateStartDate, setGenerateStartDate] = useState('');
+    const [generateMonths, setGenerateMonths] = useState(3);
     const router = useRouter();
 
     const fetchAvailabilities = async () => {
@@ -78,17 +81,25 @@ export default function AdminAvailabilitiesPage() {
     }, [availabilities.length]);
 
     const handleGenerateSlots = async () => {
-        if (!confirm('Générer automatiquement les créneaux pour les 3 prochains mois ?')) {
+        if (!generateStartDate) {
+            alert('Veuillez sélectionner une date de départ');
             return;
         }
 
+        const startDate = new Date(generateStartDate);
+        startDate.setHours(0, 0, 0, 0);
+        const startISO = startDate.toISOString();
+
         setIsGenerating(true);
         try {
-            const response = await fetch('/api/availabilities?autofill=1&months=3');
+            const response = await fetch(`/api/availabilities?autofill=1&months=${generateMonths}&fromDate=${encodeURIComponent(startISO)}`);
             const data = await response.json();
 
             if (data.success) {
                 alert(`${data.autofill?.created || 0} créneaux générés avec succès !`);
+                setShowGenerateModal(false);
+                setGenerateStartDate('');
+                setGenerateMonths(3);
                 await fetchAvailabilities();
             } else {
                 alert('Erreur lors de la génération des créneaux');
@@ -277,9 +288,8 @@ export default function AdminAvailabilitiesPage() {
             <section className="container mx-auto px-4 py-6 max-w-7xl">
                 <div className="flex gap-4 flex-wrap">
                     <button
-                        onClick={handleGenerateSlots}
-                        disabled={isGenerating}
-                        className="bg-[#D4AF37] hover:bg-[#B8941F] text-black font-semibold px-6 py-3 rounded-lg transition-colors disabled:opacity-50 shadow-[0_6px_20px_rgba(0,0,0,0.25)]"
+                        onClick={() => setShowGenerateModal(true)}
+                        className="bg-[#D4AF37] hover:bg-[#B8941F] text-black font-semibold px-6 py-3 rounded-lg transition-colors shadow-[0_6px_20px_rgba(0,0,0,0.25)]"
                     >
                         {isGenerating ? 'Génération...' : '✨ Générer des créneaux'}
                     </button>
@@ -449,6 +459,68 @@ export default function AdminAvailabilitiesPage() {
                                 className="flex-1 bg-[#D4AF37] hover:bg-[#B8941F] text-black py-3 rounded-lg transition-colors font-semibold"
                             >
                                 Bloquer
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Modal de génération de créneaux */}
+            {showGenerateModal && (
+                <div
+                    className="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50"
+                    onClick={() => setShowGenerateModal(false)}
+                >
+                    <div
+                        className="bg-[#1a1a1a] border border-[#D4AF37]/20 rounded-xl p-6 sm:p-8 max-w-md w-full shadow-[0_6px_20px_rgba(0,0,0,0.35)]"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <h2 className="text-2xl font-bold text-[#D4AF37] mb-6">Générer des créneaux</h2>
+
+                        <div className="space-y-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-300 mb-2">
+                                    Date de début
+                                </label>
+                                <input
+                                    type="date"
+                                    value={generateStartDate}
+                                    onChange={(e) => setGenerateStartDate(e.target.value)}
+                                    className="w-full px-4 py-3 bg-[#0a0a0a] border border-[#D4AF37]/30 rounded-lg text-white focus:outline-none focus:border-[#D4AF37]"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-300 mb-2">
+                                    Durée (mois)
+                                </label>
+                                <select
+                                    value={generateMonths}
+                                    onChange={(e) => setGenerateMonths(Number(e.target.value))}
+                                    className="w-full px-4 py-3 bg-[#0a0a0a] border border-[#D4AF37]/30 rounded-lg text-white focus:outline-none focus:border-[#D4AF37]"
+                                >
+                                    <option value={1}>1 mois</option>
+                                    <option value={2}>2 mois</option>
+                                    <option value={3}>3 mois</option>
+                                    <option value={6}>6 mois</option>
+                                    <option value={12}>12 mois</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div className="flex gap-4 mt-6">
+                            <button
+                                onClick={() => setShowGenerateModal(false)}
+                                className="flex-1 bg-gray-700 hover:bg-gray-600 text-white py-3 rounded-lg transition-colors font-semibold"
+                            >
+                                Annuler
+                            </button>
+                            <button
+                                onClick={handleGenerateSlots}
+                                disabled={isGenerating}
+                                className="flex-1 bg-[#D4AF37] hover:bg-[#B8941F] text-black py-3 rounded-lg transition-colors font-semibold disabled:opacity-50"
+                            >
+                                {isGenerating ? 'Génération...' : 'Générer'}
                             </button>
                         </div>
                     </div>

@@ -3,12 +3,18 @@ import { prisma } from '@/lib/prisma';
 import { requireAuth } from '@/lib/auth-middleware';
 import { ServiceType } from '@/interfaces';
 
-// GET /api/services - Récupérer tous les services (authentification requise)
+// GET /api/services - Récupérer tous les services (public pour les clients)
 export async function GET(request: NextRequest) {
-  const auth = await requireAuth(request);
+  // Vérifier s'il y a un paramètre 'public' pour accès public
+  const { searchParams } = new URL(request.url);
+  const isPublic = searchParams.get('public') === '1';
 
-  if (!auth.success) {
-    return auth.response;
+  // Si pas d'accès public demandé, vérifier l'authentification
+  if (!isPublic) {
+    const auth = await requireAuth(request);
+    if (!auth.success) {
+      return auth.response;
+    }
   }
 
   try {

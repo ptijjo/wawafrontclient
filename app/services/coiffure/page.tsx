@@ -1,19 +1,23 @@
 "use client"
 import React from 'react'
 import { useRouter } from 'next/navigation'
+import Image from "next/image"
 
 const CoiffurePage = () => {
     const router = useRouter()
 
     const tarifs = [
-        { nom: "Tresse simple", prix: "À partir de 30 €" },
-        { nom: "Tresse africaine", prix: "À partir de 40 €" },
-        { nom: "Natte collée", prix: "À partir de 50 €" },
-        { nom: "Box braids", prix: "À partir de 60 €" },
-        { nom: "Twist", prix: "À partir de 45 €" },
-        { nom: "Vanilles", prix: "À partir de 50 €" },
-        { nom: "Coupe/Dégradé", prix: "À partir de 25 €" },
-        { nom: "Coloration", prix: "À partir de 35 €" },
+        { nom: "Braids", prix: "À partir de 60 €", image: "/coiffures/braids.jpeg" },
+        { nom: "Cornrows braids/stich braids", prix: "À partir de 30 €", image: "/coiffures/cornrows braids.jpeg" },
+        { nom: "Crochet braids", prix: "À partir de 60 €", image: "" },
+        { nom: "Fausses locks", prix: "À partir de 50 €", image: "" },
+        { nom: "Locks", prix: "À partir de 200 €", image: "" },
+        { nom: "Passion twists", prix: "À partir de 60 €", image: "" },
+        { nom: "Patras/Gros bébé", prix: "À partir de 40 €", image: "" },
+        { nom: "Wings", prix: "À partir de 25 €", image: "" },
+        { nom: "Tissage", prix: "À partir de 50 €", image: "" },
+        { nom: "Vanilles", prix: "À partir de 60 €", image: "" },
+
     ]
 
     return (
@@ -33,9 +37,18 @@ const CoiffurePage = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
                     {tarifs.map((tarif, index) => (
-                        <div key={index} className="bg-[#1A1A1A] p-6 rounded-2xl border border-[#1F1F1F] hover:border-[#D4AF37] transition-all duration-300">
-                            <h3 className="text-xl font-semibold text-[#D4AF37] mb-2">{tarif.nom}</h3>
-                            <p className="text-gray-300 text-lg font-semibold">{tarif.prix}</p>
+                        <div key={index} className="bg-[#1A1A1A] p-6 rounded-2xl border border-[#1F1F1F] hover:border-[#D4AF37] transition-all duration-300 flex items-center gap-4">
+                            <div className="relative overflow-hidden w-20 h-20 rounded-lg bg-green-500">
+                                {tarif.image ? (
+                                    <Image src={tarif.image} alt={tarif.nom} fill priority className="" />
+                                ) : (
+                                    <div className="w-full h-full bg-green-500" />
+                                )}
+                            </div>
+                            <div>
+                                <h3 className="text-xl font-semibold text-[#D4AF37] mb-2">{tarif.nom}</h3>
+                                <p className="text-gray-300 text-lg font-semibold">{tarif.prix}</p>
+                            </div>
                         </div>
                     ))}
                 </div>

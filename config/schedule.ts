@@ -1,4 +1,4 @@
-export const SLOT_DURATION_MIN = 60;
+export const SLOT_DURATION_MIN = 60; // Créneaux de 60 minutes
 
 export interface TimeBlock {
   start: string; // HH:MM
@@ -6,11 +6,11 @@ export interface TimeBlock {
 }
 
 export const DEFAULT_BLOCKS: TimeBlock[] = [
-  { start: '09:00', end: '12:00' },
-  { start: '14:00', end: '18:00' },
+  { start: '09:00', end: '12:00' }, // 09:00, 10:00, 11:00
+  { start: '14:00', end: '18:00' }, // 14:00, 15:00, 16:00, 17:00
 ];
 
-export const ACTIVE_WEEK_DAYS = [1, 2, 3, 4, 5, 6]; // Monday=1 ... Saturday=6
+export const ACTIVE_WEEK_DAYS = [1, 2, 3, 4, 5, 6]; // Lundi=1 ... Samedi=6
 
 export function parseHM(baseDate: Date, hm: string): Date {
   const [h, m] = hm.split(':').map(Number);
