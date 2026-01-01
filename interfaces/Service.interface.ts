@@ -1,10 +1,10 @@
 import { Appointment } from "./Appointment.interface";
 
 export enum ServiceType {
-  TRESSES = "TRESSES",
+  COIFFURE = "COIFFURE",
   TATTOUAGE = "TATTOUAGE",
+  PIERCING = "PIERCING",
   CILS = "CILS",
-  SOINS_DE_LA_PEAU = "SOINS_DE_LA_PEAU",
 }
 
 export interface Service {
