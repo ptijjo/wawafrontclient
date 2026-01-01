@@ -11,10 +11,10 @@ datasource db {
 }
 
 enum ServiceType {
-  TRESSES
+  COIFFURE
   TATTOUAGE
+  PIERCING
   CILS
-  SOINS_DE_LA_PEAU
 }
 
 // Exemple de modèle

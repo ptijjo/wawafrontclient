@@ -36,10 +36,45 @@ export default function AdminAppointmentsPage() {
             const data = await response.json();
 
             if (data.success) {
-                // Trier par date de création (plus récent en premier)
-                const sorted = data.appointments.sort((a: AppointmentFromAPI, b: AppointmentFromAPI) =>
-                    new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-                );
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+
+                // Séparer les rendez-vous futurs et passés
+                const futureAppointments: AppointmentFromAPI[] = [];
+                const pastAppointments: AppointmentFromAPI[] = [];
+
+                data.appointments.forEach((apt: AppointmentFromAPI) => {
+                    // Utiliser la première disponibilité pour déterminer si c'est un RDV futur ou passé
+                    const firstAvailability = apt.availabilities[0];
+                    if (firstAvailability) {
+                        const aptDate = new Date(firstAvailability.date);
+                        aptDate.setHours(0, 0, 0, 0);
+                        if (aptDate >= today) {
+                            futureAppointments.push(apt);
+                        } else {
+                            pastAppointments.push(apt);
+                        }
+                    } else {
+                        futureAppointments.push(apt);
+                    }
+                });
+
+                // Trier les futurs par date (plus proche en premier)
+                futureAppointments.sort((a, b) => {
+                    const dateA = new Date(a.availabilities[0]?.date || a.createdAt).getTime();
+                    const dateB = new Date(b.availabilities[0]?.date || b.createdAt).getTime();
+                    return dateA - dateB;
+                });
+
+                // Trier les passés par date (plus récent en premier)
+                pastAppointments.sort((a, b) => {
+                    const dateA = new Date(a.availabilities[0]?.date || a.createdAt).getTime();
+                    const dateB = new Date(b.availabilities[0]?.date || b.createdAt).getTime();
+                    return dateB - dateA;
+                });
+
+                // Combiner: futurs en premier, puis passés
+                const sorted = [...futureAppointments, ...pastAppointments];
                 setAppointments(sorted);
             }
         } catch (error) {

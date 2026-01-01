@@ -15,6 +15,7 @@ export default function AdminDashboard() {
     const [loading, setLoading] = useState(true);
     const [newAppointmentsCount, setNewAppointmentsCount] = useState(0);
     const router = useRouter();
+    const NOTIFICATIONS_VIEWED_KEY = 'admin_notifications_last_viewed';
 
     useEffect(() => {
         checkAuth();
@@ -47,13 +48,14 @@ export default function AdminDashboard() {
             const data = await response.json();
 
             if (data.success) {
-                // Compter les rendez-vous des dernières 24h
-                const oneDayAgo = new Date();
-                oneDayAgo.setDate(oneDayAgo.getDate() - 1);
+                // Récupérer la dernière date de consultation des notifications
+                const lastViewed = localStorage.getItem(NOTIFICATIONS_VIEWED_KEY);
+                const lastViewedDate = lastViewed ? new Date(lastViewed) : new Date(0);
 
+                // Compter les rendez-vous créés après la dernière consultation
                 const newCount = data.appointments.filter((apt: { createdAt: string }) => {
                     const createdDate = new Date(apt.createdAt);
-                    return createdDate > oneDayAgo;
+                    return createdDate > lastViewedDate;
                 }).length;
 
                 setNewAppointmentsCount(newCount);
@@ -70,6 +72,13 @@ export default function AdminDashboard() {
         } catch (error) {
             console.error('Erreur de déconnexion:', error);
         }
+    };
+
+    const handleNotificationClick = () => {
+        // Mémoriser le moment où l'admin a cliqué sur les notifications
+        localStorage.setItem(NOTIFICATIONS_VIEWED_KEY, new Date().toISOString());
+        setNewAppointmentsCount(0);
+        router.push('/admin/appointments');
     };
 
     if (loading) {
@@ -98,7 +107,7 @@ export default function AdminDashboard() {
                     <div className="flex items-center gap-3 sm:gap-4">
                         {/* Notification cloche */}
                         <button
-                            onClick={() => router.push('/admin/appointments')}
+                            onClick={handleNotificationClick}
                             className="relative p-3 hover:bg-[#D4AF37]/10 rounded-lg transition-colors"
                             title="Nouveaux rendez-vous"
                         >

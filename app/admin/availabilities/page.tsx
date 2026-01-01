@@ -40,8 +40,19 @@ export default function AdminAvailabilitiesPage() {
             const data = await response.json();
 
             if (data.success) {
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+
+                // Filtrer pour ne garder que les créneaux à partir d'aujourd'hui et les anciens réservés
+                const filtered = data.availabilities.filter((a: AvailabilityFromAPI) => {
+                    const availDate = new Date(a.date);
+                    availDate.setHours(0, 0, 0, 0);
+                    // Garder les créneaux futurs ET les réservés (même passés, pour l'historique)
+                    return availDate >= today || a.isBooked;
+                });
+
                 // Trier par date
-                const sorted = data.availabilities.sort((a: AvailabilityFromAPI, b: AvailabilityFromAPI) =>
+                const sorted = filtered.sort((a: AvailabilityFromAPI, b: AvailabilityFromAPI) =>
                     new Date(a.date).getTime() - new Date(b.date).getTime()
                 );
                 setAvailabilities(sorted);

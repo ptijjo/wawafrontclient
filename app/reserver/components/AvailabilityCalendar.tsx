@@ -108,7 +108,7 @@ export default function AvailabilityCalendar() {
 
                     grouped.push({
                         id: apptId,
-                        title: slot.appointment ? `Réservé (${slot.appointment.firstname})` : 'Réservé',
+                        title: 'Réservé',
                         start: slot.date,
                         backgroundColor: '#f59e0b',
                         borderColor: '#d97706',
