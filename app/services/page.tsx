@@ -4,7 +4,7 @@ import Link from "next/link";
 const ServiceCard = ({ title, desc, price, img, href }: { title: string; desc: string; price: string; img: string; href: string }) => (
     <Link href={href}>
         <div className="flex flex-col items-center text-center bg-[#1A1A1A] p-4 rounded-2xl hover:scale-105 transition-transform hover:border-[#F5D76E] border w-full sm:w-auto cursor-pointer">
-            <div className="relative rounded-2xl shadow-lg mb-4 w-full h-48 overflow-hidden">
+            <div className="relative rounded-2xl shadow-lg mb-4 w-full h-40 sm:h-48 overflow-hidden">
                 <Image src={img} alt={title} fill priority sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw" className="object-cover" />
             </div>
             <h3 className="text-xl font-semibold text-[#D4AF37] mb-2">{title}</h3>
@@ -23,7 +23,7 @@ const Services = () => {
                     <p className="text-gray-400 text-base sm:text-lg">Découvrez tous nos services</p>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
                     <ServiceCard title="COIFFURE" desc="Tresses, nattes, coupes, dégradés..." price="À partir de 30 €" img="/galerie/coiffure/IMG_3723.JPEG" href="/services/coiffure" />
                     <ServiceCard title="TATOUAGES" desc="Tatouages au henné ou permanents" price="À partir de 25 €" img="/galerie/tatouages/IMG_4461.JPEG" href="/services/tatouages" />
                     <ServiceCard title="PIERCING" desc="Piercing professionnel et sécurisé" price="À partir de 30 €" img="/images/image11.png" href="/services/piercing" />

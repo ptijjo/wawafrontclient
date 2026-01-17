@@ -42,7 +42,7 @@ const Galerie = () => {
                             onClick={() => router.push(`/galerie/${category.id}`)}
                             className="group cursor-pointer"
                         >
-                            <div className="relative overflow-hidden rounded-2xl border border-[#1F1F1F] hover:border-[#D4AF37] transition-all duration-300 h-64 sm:h-80 flex items-center justify-center bg-[#111]">
+                            <div className="relative overflow-hidden rounded-2xl border border-[#1F1F1F] hover:border-[#D4AF37] transition-all duration-300 h-56 sm:h-64 md:h-80 flex items-center justify-center bg-[#111]">
                                 <Image
                                     src={category.image}
                                     alt={category.title}

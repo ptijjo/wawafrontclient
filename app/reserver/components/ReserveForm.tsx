@@ -176,8 +176,8 @@ const ReserveForm = () => {
     }, {})
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-xl sm:max-w-2xl bg-black/50 p-6 sm:p-8 rounded-lg">
-            <h2 className="text-[#D4AF37] text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 text-center">Réserver un rendez-vous</h2>
+        <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-xl sm:max-w-2xl bg-black/50 p-4 sm:p-6 md:p-8 rounded-lg">
+            <h2 className="text-[#D4AF37] text-xl sm:text-2xl md:text-3xl font-bold mb-4 sm:mb-6 text-center">Réserver un rendez-vous</h2>
 
             {/* Messages de succès/erreur */}
             {successMessage && (
@@ -197,7 +197,7 @@ const ReserveForm = () => {
                     <label className="block text-[#EAEAEA] mb-2">Nom *</label>
                     <input
                         {...register("lastname", { required: "Le nom est requis" })}
-                        className="w-full px-4 py-3 bg-[#1A1A1A] text-white rounded border border-[#D4AF37]/30 focus:border-[#D4AF37] focus:outline-none"
+                        className="w-full px-4 py-3.5 min-h-[44px] bg-[#1A1A1A] text-white rounded border border-[#D4AF37]/30 focus:border-[#D4AF37] focus:outline-none text-base"
                         placeholder="Votre nom"
                     />
                     {errors.lastname && <p className="text-red-500 text-sm mt-1">{errors.lastname.message}</p>}
@@ -208,7 +208,7 @@ const ReserveForm = () => {
                     <label className="block text-[#EAEAEA] mb-2">Prénom *</label>
                     <input
                         {...register("firstname", { required: "Le prénom est requis" })}
-                        className="w-full px-4 py-3 bg-[#1A1A1A] text-white rounded border border-[#D4AF37]/30 focus:border-[#D4AF37] focus:outline-none"
+                        className="w-full px-4 py-3.5 min-h-[44px] bg-[#1A1A1A] text-white rounded border border-[#D4AF37]/30 focus:border-[#D4AF37] focus:outline-none text-base"
                         placeholder="Votre prénom"
                     />
                     {errors.firstname && <p className="text-red-500 text-sm mt-1">{errors.firstname.message}</p>}
@@ -228,7 +228,7 @@ const ReserveForm = () => {
                                 message: "Email invalide"
                             }
                         })}
-                        className="w-full px-4 py-3 bg-[#1A1A1A] text-white rounded border border-[#D4AF37]/30 focus:border-[#D4AF37] focus:outline-none"
+                        className="w-full px-4 py-3.5 min-h-[44px] bg-[#1A1A1A] text-white rounded border border-[#D4AF37]/30 focus:border-[#D4AF37] focus:outline-none text-base"
                         placeholder="votre@email.com"
                     />
                     {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
@@ -246,7 +246,7 @@ const ReserveForm = () => {
                                 message: "Numéro invalide (10 chiffres)"
                             }
                         })}
-                        className="w-full px-4 py-3 bg-[#1A1A1A] text-white rounded border border-[#D4AF37]/30 focus:border-[#D4AF37] focus:outline-none"
+                        className="w-full px-4 py-3.5 min-h-[44px] bg-[#1A1A1A] text-white rounded border border-[#D4AF37]/30 focus:border-[#D4AF37] focus:outline-none text-base"
                         placeholder="0612345678"
                     />
                     {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>}
@@ -261,7 +261,7 @@ const ReserveForm = () => {
                 ) : (
                     <select
                         {...register("serviceId", { required: "Veuillez sélectionner une prestation" })}
-                        className="w-full px-4 py-3 bg-[#1A1A1A] text-white rounded border border-[#D4AF37]/30 focus:border-[#D4AF37] focus:outline-none"
+                        className="w-full px-4 py-3.5 min-h-[44px] bg-[#1A1A1A] text-white rounded border border-[#D4AF37]/30 focus:border-[#D4AF37] focus:outline-none text-base"
                     >
                         <option value="">Sélectionnez une prestation</option>
                         {services.map((service) => (
@@ -286,7 +286,7 @@ const ReserveForm = () => {
                 ) : (
                     <select
                         {...register("startAvailabilityId", { required: "Veuillez sélectionner un créneau" })}
-                        className="w-full px-4 py-3 bg-[#1A1A1A] text-white rounded border border-[#D4AF37]/30 focus:border-[#D4AF37] focus:outline-none"
+                        className="w-full px-4 py-3.5 min-h-[44px] bg-[#1A1A1A] text-white rounded border border-[#D4AF37]/30 focus:border-[#D4AF37] focus:outline-none text-base"
                     >
                         <option value="">Sélectionnez un créneau</option>
                         {Object.entries(groupedAvailabilities).map(([date, slots]) => (
@@ -312,7 +312,7 @@ const ReserveForm = () => {
                 <textarea
                     {...register("note")}
                     rows={4}
-                    className="w-full px-4 py-3 bg-[#1A1A1A] text-white rounded border border-[#D4AF37]/30 focus:border-[#D4AF37] focus:outline-none resize-none"
+                    className="w-full px-4 py-3 bg-[#1A1A1A] text-white rounded border border-[#D4AF37]/30 focus:border-[#D4AF37] focus:outline-none resize-none text-base min-h-[100px]"
                     placeholder="Des précisions sur votre demande..."
                 />
             </div>
@@ -321,7 +321,7 @@ const ReserveForm = () => {
             <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-[#D4AF37] text-black font-bold py-3 px-6 rounded hover:bg-[#B8941F] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-[#D4AF37] text-black font-bold py-3.5 px-6 min-h-[48px] rounded hover:bg-[#B8941F] active:scale-95 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation text-base"
             >
                 {isLoading ? 'Réservation en cours...' : 'Réserver maintenant'}
             </button>

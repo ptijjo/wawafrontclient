@@ -49,18 +49,18 @@ export default function Home() {
 
       {/* Bannière principale */}
       <section
-        className="relative flex flex-col md:flex-row items-center justify-between w-full h-auto md:h-[600px] bg-cover bg-center"
+        className="relative flex flex-col md:flex-row items-center justify-between w-full h-auto min-h-[400px] md:h-[600px] bg-cover bg-center"
         style={{ backgroundImage: "url('/bg/bg_Home.png')", backgroundRepeat: 'no-repeat', backgroundPosition: 'center 0%', backgroundSize: 'cover' }}
       >
         {/* Overlay sombre pour un contraste harmonieux */}
         <div className="absolute inset-0 bg-black/40"></div>
 
         {/* Contenu principal */}
-        <div className="relative z-10 flex flex-col items-center md:items-start justify-center text-center md:text-left px-4 sm:px-6 md:px-20 py-16 md:py-0 w-full md:w-1/2">
-          <h1 className="text-[#D4AF37] text-3xl sm:text-4xl md:text-6xl font-serif font-bold leading-tight mb-6 md:mb-8">
+        <div className="relative z-10 flex flex-col items-center md:items-start justify-center text-center md:text-left px-4 sm:px-6 md:px-20 py-12 sm:py-16 md:py-0 w-full md:w-1/2">
+          <h1 className="text-[#D4AF37] text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-serif font-bold leading-tight mb-6 md:mb-8">
             RÉVÉLEZ<br />VOTRE<br />ÉCLAT<br />NATUREL
           </h1>
-          <button className="border border-[#D4AF37] text-[#D4AF37] px-5 sm:px-6 py-3 uppercase tracking-wider rounded hover:bg-[#D4AF37] hover:text-black transition-all duration-300" onClick={() => router.push('/reserver')}>
+          <button className="border border-[#D4AF37] text-[#D4AF37] px-6 py-3.5 min-h-[44px] text-sm sm:text-base uppercase tracking-wider rounded hover:bg-[#D4AF37] hover:text-black active:scale-95 transition-all duration-300 touch-manipulation" onClick={() => router.push('/reserver')}>
             Réservez maintenant
           </button>
         </div>
@@ -74,11 +74,11 @@ export default function Home() {
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
           {/* Bloc 1 */}
           <div className="flex flex-col items-center text-center w-full">
-            <div className="relative rounded-2xl shadow-lg mb-4 w-full h-48 overflow-hidden flex items-center justify-center">
-              <Image src="/images/image11.png" alt="Expérience complète" fill priority sizes="800" className="object-cover object-[center_18%]" />
+            <div className="relative rounded-2xl shadow-lg mb-4 w-full h-40 sm:h-48 overflow-hidden flex items-center justify-center">
+              <Image src="/images/image11.png" alt="Expérience complète" fill priority sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw" className="object-cover object-[center_18%]" />
             </div>
             <h3 className="text-xl font-semibold text-[#D4AF37] mb-2">Une expérience complète</h3>
             <p className="text-gray-300 text-sm">Coiffure, tatouage et soins réunis pour révéler votre éclat naturel.</p>
@@ -86,8 +86,8 @@ export default function Home() {
 
           {/* Bloc 2 */}
           <div className="flex flex-col items-center text-center w-full">
-            <div className="relative rounded-2xl shadow-lg mb-4 w-full h-48 overflow-hidden">
-              <Image src="/images/image3.png" alt="Espace d'expression" fill priority sizes="800" className="object-cover" />
+            <div className="relative rounded-2xl shadow-lg mb-4 w-full h-40 sm:h-48 overflow-hidden">
+              <Image src="/images/image3.png" alt="Espace d'expression" fill priority sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw" className="object-cover" />
             </div>
             <h3 className="text-xl font-semibold text-[#D4AF37] mb-2">Un espace d&apos;expression</h3>
             <p className="text-gray-300 text-sm">Votre style, votre identité — ici, la beauté devient art.</p>
@@ -95,8 +95,8 @@ export default function Home() {
 
           {/* Bloc 3 */}
           <div className="flex flex-col items-center text-center w-full">
-            <div className="relative rounded-2xl shadow-lg mb-4 w-full h-48 overflow-hidden flex items-center justify-center">
-              <Image src="/images/image2.png" alt="Experts passionnés" fill priority sizes="800" className="object-cover" />
+            <div className="relative rounded-2xl shadow-lg mb-4 w-full h-40 sm:h-48 overflow-hidden flex items-center justify-center">
+              <Image src="/images/image2.png" alt="Experts passionnés" fill priority sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw" className="object-cover" />
             </div>
             <h3 className="text-xl font-semibold text-[#D4AF37] mb-2">Des experts passionnés</h3>
             <p className="text-gray-300 text-sm">Un savoir-faire unique au service de votre singularité.</p>
@@ -104,8 +104,8 @@ export default function Home() {
 
           {/* Bloc 4 */}
           <div className="flex flex-col items-center text-center w-full">
-            <div className="relative rounded-2xl shadow-lg mb-4 object-cover w-full h-48 overflow-hidden">
-              <Image src="/images/image4.png" alt="Atmosphère unique" fill priority sizes="800" />
+            <div className="relative rounded-2xl shadow-lg mb-4 object-cover w-full h-40 sm:h-48 overflow-hidden">
+              <Image src="/images/image4.png" alt="Atmosphère unique" fill priority sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw" className="object-cover" />
             </div>
             <h3 className="text-xl font-semibold text-[#D4AF37] mb-2">Une atmosphère unique</h3>
             <p className="text-gray-300 text-sm">Un lieu raffiné où chaque instant devient une expérience.</p>
@@ -123,17 +123,17 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-[1fr_1.6fr_1fr] gap-4 sm:gap-6 items-center">
+          <div className="grid grid-cols-1 sm:grid-cols-[1fr_1.6fr_1fr] gap-3 sm:gap-4 md:gap-6 items-center">
             {/* Image précédente (miniature) */}
-            <div className="relative h-40 sm:h-64 overflow-hidden rounded-xl border border-[#1F1F1F] bg-[#111] flex items-center justify-center opacity-80">
+            <div className="relative h-32 sm:h-40 md:h-64 overflow-hidden rounded-xl border border-[#1F1F1F] bg-[#111] flex items-center justify-center opacity-80 hidden sm:flex">
               {totalImages > 0 ? (
                 <Image
                   key={`prev-${currentImageIndex}`}
                   src={carouselImages[prevIndex]}
                   alt="Création précédente WavaBANGS"
                   fill
-                  sizes="33vw"
-                  priority
+                  sizes="(max-width: 640px) 0vw, 33vw"
+                  loading="lazy"
                   className={`object-contain object-center ${isAnimating ? 'carousel-prev' : ''}`}
                 />
               ) : (
@@ -145,7 +145,7 @@ export default function Home() {
             </div>
 
             {/* Image active (grande) */}
-            <div className="relative h-[220px] sm:h-80 md:h-[420px] overflow-hidden rounded-2xl border border-[#1F1F1F] bg-[#111]
+            <div className="relative h-[280px] sm:h-80 md:h-[420px] overflow-hidden rounded-2xl border border-[#1F1F1F] bg-[#111]
                             shadow-[0_10px_40px_rgba(0,0,0,0.35)] flex items-center justify-center">
               {totalImages > 0 ? (
                 <Image
@@ -153,7 +153,7 @@ export default function Home() {
                   src={carouselImages[currentImageIndex]}
                   alt="Création WavaBANGS"
                   fill
-                  sizes="60vw"
+                  sizes="(max-width: 640px) 100vw, 60vw"
                   priority
                   className={`object-contain object-center ${isAnimating ? 'carousel-current' : ''}`}
                 />
@@ -166,15 +166,15 @@ export default function Home() {
             </div>
 
             {/* Image suivante (miniature) */}
-            <div className="relative h-40 sm:h-64 overflow-hidden rounded-xl border border-[#1F1F1F] bg-[#111] flex items-center justify-center opacity-80">
+            <div className="relative h-32 sm:h-40 md:h-64 overflow-hidden rounded-xl border border-[#1F1F1F] bg-[#111] flex items-center justify-center opacity-80 hidden sm:flex">
               {totalImages > 0 ? (
                 <Image
                   key={`next-${currentImageIndex}`}
                   src={carouselImages[nextIndex]}
                   alt="Création suivante WavaBANGS"
                   fill
-                  sizes="33vw"
-                  priority
+                  sizes="(max-width: 640px) 0vw, 33vw"
+                  loading="lazy"
                   className={`object-contain object-center ${isAnimating ? 'carousel-next' : ''}`}
                 />
               ) : (

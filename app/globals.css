@@ -135,6 +135,37 @@ svg {
 
 button {
   letter-spacing: 0.02em;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Optimisations tactiles pour mobile */
+@media (hover: none) and (pointer: coarse) {
+  button, a, input, select, textarea {
+    -webkit-tap-highlight-color: rgba(212, 175, 55, 0.2);
+  }
+}
+
+/* Amélioration du scroll sur mobile */
+@media (max-width: 768px) {
+  html {
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  /* Amélioration de la lisibilité sur mobile */
+  input, select, textarea {
+    font-size: 16px; /* Évite le zoom automatique sur iOS */
+  }
+  
+  /* Optimisation des performances de scroll */
+  * {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+  }
 }
 
 .section-title {

@@ -167,7 +167,7 @@ export default function AvailabilityCalendar() {
 
     return (
         <div className="w-full bg-[#1a1a1a] rounded-2xl p-3 sm:p-4 md:p-6 overflow-hidden shadow-[0_6px_20px_rgba(0,0,0,0.35)] border border-[#D4AF37]/10">
-            <div className="mb-4 flex gap-4 flex-wrap text-sm">
+            <div className="mb-4 flex gap-3 sm:gap-4 flex-wrap text-xs sm:text-sm">
                 <div className="flex items-center gap-2">
                     <div className="w-4 h-4 bg-[#10b981] rounded"></div>
                     <span className="text-gray-300">Disponible</span>
@@ -245,11 +245,14 @@ export default function AvailabilityCalendar() {
                 .fc .fc-daygrid-day-number { color: #e5e7eb; }
                 .fc .fc-day-today { background-color: rgba(212, 175, 55, 0.1) !important; }
                 @media (max-width: 640px) {
-                    .fc .fc-toolbar-title { font-size: 1rem; line-height: 1.25rem; }
-                    .fc .fc-toolbar { flex-wrap: wrap; gap: 0.5rem; }
-                    .fc .fc-button { padding: 0.35rem 0.6rem; font-size: 0.8rem; }
-                    .fc .fc-daygrid-day { min-height: 72px; }
+                    .fc .fc-toolbar-title { font-size: 0.875rem; line-height: 1.25rem; }
+                    .fc .fc-toolbar { flex-wrap: wrap; gap: 0.5rem; padding: 0.5rem 0.25rem; }
+                    .fc .fc-button { padding: 0.5rem 0.75rem; font-size: 0.75rem; min-height: 36px; }
+                    .fc .fc-daygrid-day { min-height: 80px; }
                     .fc .fc-daygrid-day-events { margin-top: 2px; }
+                    .fc .fc-daygrid-day-number { font-size: 0.875rem; }
+                    .fc .fc-col-header-cell { font-size: 0.75rem; padding: 0.5rem 0.25rem; }
+                    .fc .fc-event { font-size: 0.75rem; padding: 0.125rem 0.25rem; }
                 }
             `}</style>
         </div>

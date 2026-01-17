@@ -65,7 +65,8 @@ const CategoryPage = ({ params }: CategoryPageProps) => {
                 <div className="flex items-center gap-4 mb-12">
                     <button
                         onClick={() => router.back()}
-                        className="text-[#D4AF37] hover:text-white transition-colors duration-200 text-2xl hover:cursor-pointer"
+                        className="text-[#D4AF37] hover:text-white transition-colors duration-200 text-2xl hover:cursor-pointer min-w-[44px] min-h-[44px] flex items-center justify-center touch-manipulation"
+                        aria-label="Retour"
                     >
                         <FaLongArrowAltLeft />
 
@@ -80,7 +81,7 @@ const CategoryPage = ({ params }: CategoryPageProps) => {
                     </div>
                 ) : images.length > 0 ? (
                     <>
-                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4 mb-12">
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-3 md:gap-4 mb-12">
                             {images.map((image, index) => (
                                 <div
                                     key={index}
@@ -93,6 +94,7 @@ const CategoryPage = ({ params }: CategoryPageProps) => {
                                         fill
                                         sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
                                         className="object-cover group-hover:scale-110 transition-transform duration-300"
+                                        loading={index < 8 ? "eager" : "lazy"}
                                     />
                                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all duration-300" />
                                 </div>
@@ -110,7 +112,7 @@ const CategoryPage = ({ params }: CategoryPageProps) => {
             {showScrollTop && (
                 <button
                     onClick={scrollToTop}
-                    className="fixed bottom-8 right-8 bg-[#D4AF37] hover:bg-[#C49B2C] text-black rounded-full w-12 h-12 flex items-center justify-center transition-all duration-300 shadow-lg hover:shadow-xl z-40 hover:cursor-pointer"
+                    className="fixed bottom-6 right-4 sm:bottom-8 sm:right-8 bg-[#D4AF37] hover:bg-[#C49B2C] active:scale-95 text-black rounded-full w-12 h-12 flex items-center justify-center transition-all duration-300 shadow-lg hover:shadow-xl z-40 hover:cursor-pointer touch-manipulation"
                     aria-label="Retour en haut"
                 >
                     <FaArrowUp />
@@ -127,7 +129,8 @@ const CategoryPage = ({ params }: CategoryPageProps) => {
                     <div className="relative w-full h-full max-w-6xl max-h-[95vh] rounded-2xl overflow-hidden flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
                         <button
                             onClick={() => setSelectedImage(null)}
-                            className="absolute top-4 right-4 text-white bg-black/50 hover:bg-black/75 rounded-full w-10 h-10 flex items-center justify-center transition-all duration-200 z-10"
+                            className="absolute top-4 right-4 text-white bg-black/50 hover:bg-black/75 active:scale-95 rounded-full min-w-[44px] min-h-[44px] flex items-center justify-center transition-all duration-200 z-10 touch-manipulation"
+                            aria-label="Fermer"
                         >
                             ✕
                         </button>

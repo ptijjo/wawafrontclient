@@ -10,14 +10,14 @@ const Contact = () => {
             <h1 className='text-[#D4AF37] text-center text-3xl sm:text-5xl md:text-6xl font-bold'>Nous contacter</h1>
             <p className="text-[#EAEAEA] text-center mt-3.5 px-4">Vous avez des questions ? Envoyez-nous un message via le formulaire ci-dessous.</p>
 
-            <section className="flex flex-col mt-36 w-full items-center gap-20 mb-20">
-                <div className="flex w-full flex-col md:flex-row justify-center md:justify-between px-4 md:px-20">
+            <section className="flex flex-col mt-12 sm:mt-20 md:mt-36 w-full items-center gap-12 sm:gap-16 md:gap-20 mb-12 sm:mb-16 md:mb-20">
+                <div className="flex w-full flex-col md:flex-row justify-center md:justify-between px-4 sm:px-6 md:px-20 gap-8 md:gap-12">
                     {/* Adresse */}
-                    <div className="flex flex-col gap-4 items-start text-[#EAEAEA] text-2xl mb-6 md:mb-0">
-                        <p className='flex gap-2.5 items-center'> <FaLocationDot className="text-[#D4AF37]" /> 30 rue de la forêt 77160 Chenoise Cucharmoy</p>
-                        <p className='flex gap-2.5 items-center'> <BsFillTelephoneFill className="text-[#D4AF37]" /> 07-49-42-29-24</p>
-                        <p className=' flex gap-2.5 items-center'><CiMail className="text-[#D4AF37]" /> wava05@outlook.fr</p>
-                        <p className='flex gap-2.5 items-center'> <CiClock2 className="text-[#D4AF37]" />LUN - SAM : 9H00 - 12H00 / 14H00 - 18H00</p>
+                    <div className="flex flex-col gap-3 sm:gap-4 items-start text-[#EAEAEA] text-base sm:text-lg md:text-xl lg:text-2xl mb-6 md:mb-0">
+                        <p className='flex gap-2.5 items-start sm:items-center text-sm sm:text-base md:text-lg lg:text-xl'> <FaLocationDot className="text-[#D4AF37] flex-shrink-0 mt-1 sm:mt-0" /> <span>30 rue de la forêt 77160 Chenoise Cucharmoy</span></p>
+                        <p className='flex gap-2.5 items-center'> <BsFillTelephoneFill className="text-[#D4AF37] flex-shrink-0" /> <a href="tel:0749422924" className="hover:text-[#D4AF37] transition-colors">07-49-42-29-24</a></p>
+                        <p className='flex gap-2.5 items-center'><CiMail className="text-[#D4AF37] flex-shrink-0" /> <a href="mailto:wava05@outlook.fr" className="hover:text-[#D4AF37] transition-colors break-all">wava05@outlook.fr</a></p>
+                        <p className='flex gap-2.5 items-start sm:items-center text-sm sm:text-base md:text-lg lg:text-xl'> <CiClock2 className="text-[#D4AF37] flex-shrink-0 mt-1 sm:mt-0" /> <span>LUN - SAM : 9H00 - 12H00 / 14H00 - 18H00</span></p>
                     </div>
                     <ContactForm />
                 </div>
