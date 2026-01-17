@@ -40,94 +40,94 @@ export default function AvailabilityCalendar() {
     const [loading, setLoading] = useState(true);
     const [calendarView, setCalendarView] = useState<'dayGridMonth' | 'timeGridWeek' | 'timeGridDay'>('timeGridWeek');
 
-    const fetchAvailabilities = async () => {
-        try {
-            setLoading(true);
-            // Récupère un lot large (pagination) - sans autofill pour les clients
-            const response = await fetch('/api/availabilities?page=1&pageSize=500');
-            const data = await response.json();
-
-            if (data.success) {
-                // Regrouper les slots réservés contigus par rendez-vous
-                const slots: Availability[] = data.availabilities;
-
-                // Tri par date (assurer ordre)
-                slots.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-
-                const grouped: CalendarEvent[] = [];
-                const textColor = '#ffffff';
-
-                let i = 0;
-                while (i < slots.length) {
-                    const slot = slots[i];
-                    const slotDate = new Date(slot.date);
-
-                    if (slot.isBlocked) {
-                        grouped.push({
-                            id: slot.id,
-                            title: slot.blockedNote || 'Indisponible',
-                            start: slot.date,
-                            backgroundColor: '#6b7280', // Gris pour bloqué
-                            borderColor: '#4b5563',
-                            textColor,
-                            extendedProps: { isBooked: false, isBlocked: true, blockedNote: slot.blockedNote },
-                        });
-                        i++; continue;
-                    }
-
-                    if (!slot.isBooked) {
-                        grouped.push({
-                            id: slot.id,
-                            title: 'Disponible',
-                            start: slot.date,
-                            backgroundColor: '#10b981',
-                            borderColor: '#059669',
-                            textColor,
-                            extendedProps: { isBooked: false, isBlocked: false },
-                        });
-                        i++; continue;
-                    }
-
-                    // Slot réservé: regrouper les suivants contigus appartenant au même rendez-vous
-                    const apptId = slot.appointment?.id || `appt-${slot.id}`;
-                    let end = new Date(slotDate.getTime() + SLOT_DURATION_MIN * 60000);
-                    let j = i + 1;
-                    while (j < slots.length) {
-                        const next = slots[j];
-                        if (!next.isBooked) break;
-                        if ((next.appointment?.id || `appt-${next.id}`) !== apptId) break;
-                        const nextDate = new Date(next.date);
-                        const diffMin = (nextDate.getTime() - end.getTime() + SLOT_DURATION_MIN * 60000) / 60000; // simplified check
-                        if (nextDate.getTime() === end.getTime()) {
-                            end = new Date(end.getTime() + SLOT_DURATION_MIN * 60000);
-                            j++;
-                        } else {
-                            break;
-                        }
-                    }
-
-                    grouped.push({
-                        id: apptId,
-                        title: 'Réservé',
-                        start: slot.date,
-                        backgroundColor: '#f59e0b',
-                        borderColor: '#d97706',
-                        textColor,
-                        extendedProps: { isBooked: true, isBlocked: false },
-                    });
-                    i = j;
-                }
-
-                setEvents(grouped);
-            }
-        } catch (error) {
-            console.error('Erreur lors de la récupération des disponibilités:', error);
-        } finally {
-            setLoading(false);
-        }
-    };
-
     useEffect(() => {
+        const fetchAvailabilities = async () => {
+            try {
+                setLoading(true);
+                // Récupère un lot large (pagination) - sans autofill pour les clients
+                const response = await fetch('/api/availabilities?page=1&pageSize=500');
+                const data = await response.json();
+
+                if (data.success) {
+                    // Regrouper les slots réservés contigus par rendez-vous
+                    const slots: Availability[] = data.availabilities;
+
+                    // Tri par date (assurer ordre)
+                    slots.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+                    const grouped: CalendarEvent[] = [];
+                    const textColor = '#ffffff';
+
+                    let i = 0;
+                    while (i < slots.length) {
+                        const slot = slots[i];
+                        const slotDate = new Date(slot.date);
+
+                        if (slot.isBlocked) {
+                            grouped.push({
+                                id: slot.id,
+                                title: slot.blockedNote || 'Indisponible',
+                                start: slot.date,
+                                backgroundColor: '#6b7280', // Gris pour bloqué
+                                borderColor: '#4b5563',
+                                textColor,
+                                extendedProps: { isBooked: false, isBlocked: true, blockedNote: slot.blockedNote },
+                            });
+                            i++; continue;
+                        }
+
+                        if (!slot.isBooked) {
+                            grouped.push({
+                                id: slot.id,
+                                title: 'Disponible',
+                                start: slot.date,
+                                backgroundColor: '#10b981',
+                                borderColor: '#059669',
+                                textColor,
+                                extendedProps: { isBooked: false, isBlocked: false },
+                            });
+                            i++; continue;
+                        }
+
+                        // Slot réservé: regrouper les suivants contigus appartenant au même rendez-vous
+                        const apptId = slot.appointment?.id || `appt-${slot.id}`;
+                        let end = new Date(slotDate.getTime() + SLOT_DURATION_MIN * 60000);
+                        let j = i + 1;
+                        while (j < slots.length) {
+                            const next = slots[j];
+                            if (!next.isBooked) break;
+                            if ((next.appointment?.id || `appt-${next.id}`) !== apptId) break;
+                            const nextDate = new Date(next.date);
+                            const diffMin = (nextDate.getTime() - end.getTime() + SLOT_DURATION_MIN * 60000) / 60000; // simplified check
+                            if (nextDate.getTime() === end.getTime()) {
+                                end = new Date(end.getTime() + SLOT_DURATION_MIN * 60000);
+                                j++;
+                            } else {
+                                break;
+                            }
+                        }
+
+                        grouped.push({
+                            id: apptId,
+                            title: 'Réservé',
+                            start: slot.date,
+                            backgroundColor: '#f59e0b',
+                            borderColor: '#d97706',
+                            textColor,
+                            extendedProps: { isBooked: true, isBlocked: false },
+                        });
+                        i = j;
+                    }
+
+                    setEvents(grouped);
+                }
+            } catch (error) {
+                console.error('Erreur lors de la récupération des disponibilités:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
         // Choisir une vue adaptée au mobile pour éviter le dépassement horizontal
         const updateView = () => {
             const w = window.innerWidth;
@@ -141,8 +141,26 @@ export default function AvailabilityCalendar() {
         };
         updateView();
         window.addEventListener('resize', updateView);
+        
+        // Écouter les événements de rafraîchissement du calendrier
+        const handleRefresh = () => {
+            fetchAvailabilities();
+        };
+        
+        // Écouter l'événement personnalisé de création de rendez-vous
+        window.addEventListener('appointment-created', handleRefresh);
+        
+        // Rafraîchir automatiquement toutes les 30 secondes
+        const interval = setInterval(fetchAvailabilities, 30000);
+        
+        // Chargement initial
         fetchAvailabilities();
-        return () => window.removeEventListener('resize', updateView);
+        
+        return () => {
+            window.removeEventListener('resize', updateView);
+            window.removeEventListener('appointment-created', handleRefresh);
+            clearInterval(interval);
+        };
     }, []);
 
     const handleEventClick = (info: any) => {

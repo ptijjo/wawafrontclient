@@ -156,6 +156,9 @@ const ReserveForm = () => {
                     setAvailabilities(available)
                 }
             }
+
+            // Déclencher un événement pour rafraîchir le calendrier
+            window.dispatchEvent(new CustomEvent('appointment-created'))
         } catch (error) {
             const errorMsg = error instanceof Error ? error.message : 'Une erreur est survenue'
             setErrorMessage(errorMsg)

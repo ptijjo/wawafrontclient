@@ -2,30 +2,43 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { loginSchema } from '@/lib/validations';
+import { authRateLimiter, getRateLimitIdentifier, checkRateLimit } from '@/lib/rate-limit';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-this';
-const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || 'your-refresh-secret-key-change-this';
+const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET;
+
+if (!JWT_SECRET || !JWT_REFRESH_SECRET) {
+  throw new Error('JWT_SECRET et JWT_REFRESH_SECRET doivent être définis dans les variables d\'environnement');
+}
+
 const MAX_LOGIN_ATTEMPTS = Number(process.env.MAX_LOGIN_ATTEMPTS) || 3;
 const LOCK_TIME = (Number(process.env.LOCKOUT_DURATION_MINUTES) || 30) * 60 * 1000; // default 30 minutes
 
-interface LoginRequest {
-  email: string;
-  password: string;
-  userAgent?: string;
-  ipAddress?: string;
-}
-
 export async function POST(request: NextRequest) {
-  try {
-    const body: LoginRequest = await request.json();
-    const { email, password } = body;
+  // Rate limiting strict pour l'authentification
+  const identifier = getRateLimitIdentifier(request);
+  const rateLimitCheck = await checkRateLimit(authRateLimiter, identifier);
+  if (!rateLimitCheck.success) {
+    return rateLimitCheck.response;
+  }
 
-    if (!email || !password) {
+  try {
+    const body = await request.json();
+    
+    // Validation avec Zod
+    const validationResult = loginSchema.safeParse(body);
+    if (!validationResult.success) {
       return NextResponse.json(
-        { error: 'Email et mot de passe requis' },
+        { 
+          error: 'Données invalides',
+          details: validationResult.error.errors,
+        },
         { status: 400 }
       );
     }
+
+    const { email, password } = validationResult.data;
 
     // Récupérer les informations du client
     const userAgent = request.headers.get('user-agent') || 'unknown';

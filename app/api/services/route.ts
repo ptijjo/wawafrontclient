@@ -1,10 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { requireAuth } from '@/lib/auth-middleware';
-import { ServiceType } from '@/interfaces';
+import { createServiceSchema } from '@/lib/validations';
+import { apiRateLimiter, getRateLimitIdentifier, checkRateLimit } from '@/lib/rate-limit';
 
 // GET /api/services - Récupérer tous les services (public pour les clients)
 export async function GET(request: NextRequest) {
+  // Rate limiting
+  const identifier = getRateLimitIdentifier(request);
+  const rateLimitCheck = await checkRateLimit(apiRateLimiter, identifier);
+  if (!rateLimitCheck.success) {
+    return rateLimitCheck.response;
+  }
+
   // Vérifier s'il y a un paramètre 'public' pour accès public
   const { searchParams } = new URL(request.url);
   const isPublic = searchParams.get('public') === '1';
@@ -40,49 +48,42 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST /api/services - Créer un nouveau service (accessible aux clients)
+// POST /api/services - Créer un nouveau service (authentification requise)
 export async function POST(request: NextRequest) {
+  // Rate limiting
+  const identifier = getRateLimitIdentifier(request);
+  const rateLimitCheck = await checkRateLimit(apiRateLimiter, identifier);
+  if (!rateLimitCheck.success) {
+    return rateLimitCheck.response;
+  }
+
+  // Authentification requise
+  const auth = await requireAuth(request);
+  if (!auth.success) {
+    return auth.response;
+  }
+
   try {
     const body = await request.json();
-    const { service, durationMin, price, description } = body;
-
-    // Validation
-    if (!service || !durationMin) {
-      return NextResponse.json(
-        { error: 'Le type de service et la durée sont requis' },
-        { status: 400 }
-      );
-    }
-
-    // Vérifier que le type de service est valide
-    if (!Object.values(ServiceType).includes(service as ServiceType)) {
+    
+    // Validation avec Zod
+    const validationResult = createServiceSchema.safeParse(body);
+    if (!validationResult.success) {
       return NextResponse.json(
         { 
-          error: 'Type de service invalide',
-          validTypes: Object.values(ServiceType),
+          error: 'Données invalides',
+          details: validationResult.error.errors,
         },
         { status: 400 }
       );
     }
 
-    if (typeof durationMin !== 'number' || durationMin <= 0) {
-      return NextResponse.json(
-        { error: 'La durée doit être un nombre positif' },
-        { status: 400 }
-      );
-    }
-
-    if (price !== undefined && price !== null && (typeof price !== 'number' || price < 0)) {
-      return NextResponse.json(
-        { error: 'Le prix doit être un nombre positif ou nul' },
-        { status: 400 }
-      );
-    }
+    const { service, durationMin, price, description } = validationResult.data;
 
     // Créer le service
     const newService = await prisma.service.create({
       data: {
-        service: service as ServiceType,
+        service,
         durationMin,
         price: price ?? null,
         description: description ?? null,

@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { requireAuth } from '@/lib/auth-middleware';
-import { ServiceType } from '@/interfaces';
+import { updateServiceSchema, objectIdSchema } from '@/lib/validations';
+import { apiRateLimiter, getRateLimitIdentifier, checkRateLimit } from '@/lib/rate-limit';
 
 // GET /api/services/[id] - Récupérer un service par ID (authentification requise)
 export async function GET(
@@ -16,6 +17,15 @@ export async function GET(
 
   try {
     const { id } = await params;
+    
+    // Validation ObjectId
+    const idValidation = objectIdSchema.safeParse(id);
+    if (!idValidation.success) {
+      return NextResponse.json(
+        { error: 'ID invalide' },
+        { status: 400 }
+      );
+    }
 
     const service = await prisma.service.findUnique({
       where: { id },
@@ -59,6 +69,13 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  // Rate limiting
+  const identifier = getRateLimitIdentifier(request);
+  const rateLimitCheck = await checkRateLimit(apiRateLimiter, identifier);
+  if (!rateLimitCheck.success) {
+    return rateLimitCheck.response;
+  }
+
   const auth = await requireAuth(request);
 
   if (!auth.success) {
@@ -67,8 +84,31 @@ export async function PATCH(
 
   try {
     const { id } = await params;
+    
+    // Validation ObjectId
+    const idValidation = objectIdSchema.safeParse(id);
+    if (!idValidation.success) {
+      return NextResponse.json(
+        { error: 'ID invalide' },
+        { status: 400 }
+      );
+    }
+
     const body = await request.json();
-    const { service, durationMin, price, description } = body;
+    
+    // Validation avec Zod
+    const validationResult = updateServiceSchema.safeParse(body);
+    if (!validationResult.success) {
+      return NextResponse.json(
+        { 
+          error: 'Données invalides',
+          details: validationResult.error.errors,
+        },
+        { status: 400 }
+      );
+    }
+
+    const { service, durationMin, price, description } = validationResult.data;
 
     // Vérifier si le service existe
     const existingService = await prisma.service.findUnique({
@@ -82,36 +122,11 @@ export async function PATCH(
       );
     }
 
-    // Validation
-    if (service && !Object.values(ServiceType).includes(service as ServiceType)) {
-      return NextResponse.json(
-        { 
-          error: 'Type de service invalide',
-          validTypes: Object.values(ServiceType),
-        },
-        { status: 400 }
-      );
-    }
-
-    if (durationMin !== undefined && (typeof durationMin !== 'number' || durationMin <= 0)) {
-      return NextResponse.json(
-        { error: 'La durée doit être un nombre positif' },
-        { status: 400 }
-      );
-    }
-
-    if (price !== undefined && price !== null && (typeof price !== 'number' || price < 0)) {
-      return NextResponse.json(
-        { error: 'Le prix doit être un nombre positif ou nul' },
-        { status: 400 }
-      );
-    }
-
     // Mettre à jour le service
     const updatedService = await prisma.service.update({
       where: { id },
       data: {
-        ...(service && { service: service as ServiceType }),
+        ...(service && { service }),
         ...(durationMin !== undefined && { durationMin }),
         ...(price !== undefined && { price }),
         ...(description !== undefined && { description }),
@@ -139,6 +154,13 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  // Rate limiting
+  const identifier = getRateLimitIdentifier(request);
+  const rateLimitCheck = await checkRateLimit(apiRateLimiter, identifier);
+  if (!rateLimitCheck.success) {
+    return rateLimitCheck.response;
+  }
+
   const auth = await requireAuth(request);
 
   if (!auth.success) {
@@ -147,6 +169,15 @@ export async function DELETE(
 
   try {
     const { id } = await params;
+    
+    // Validation ObjectId
+    const idValidation = objectIdSchema.safeParse(id);
+    if (!idValidation.success) {
+      return NextResponse.json(
+        { error: 'ID invalide' },
+        { status: 400 }
+      );
+    }
 
     // Vérifier si le service existe
     const existingService = await prisma.service.findUnique({

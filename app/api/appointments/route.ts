@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { requireAuth } from '@/lib/auth-middleware';
-import { sendAppointmentConfirmation, sendNewAppointmentNotification } from '@/lib/mailjet';
+import { queueAppointmentConfirmation, queueNewAppointmentNotification } from '@/lib/email-queue';
+import { createAppointmentSchema, objectIdSchema } from '@/lib/validations';
+import { publicRateLimiter, getRateLimitIdentifier, checkRateLimit } from '@/lib/rate-limit';
 import { SLOT_DURATION_MIN } from '@/config/schedule';
 
 // GET /api/appointments - Récupérer tous les rendez-vous (authentification requise)
@@ -64,14 +66,37 @@ export async function GET(request: NextRequest) {
 
 // POST /api/appointments - Créer un rendez-vous (public pour les clients)
 export async function POST(request: NextRequest) {
+  // Rate limiting pour les routes publiques
+  const identifier = getRateLimitIdentifier(request);
+  const rateLimitCheck = await checkRateLimit(publicRateLimiter, identifier);
+  if (!rateLimitCheck.success) {
+    return rateLimitCheck.response;
+  }
+
   try {
     const body = await request.json();
-    const { lastname, firstname, phone, email, note, serviceId, startAvailabilityId } = body;
-
-    // Validation
-    if (!lastname || !firstname || !phone || !serviceId) {
+    
+    // Validation avec Zod
+    const validationResult = createAppointmentSchema.safeParse(body);
+    if (!validationResult.success) {
       return NextResponse.json(
-        { error: 'Le nom, prénom, téléphone et service sont requis' },
+        { 
+          error: 'Données invalides',
+          details: validationResult.error.errors,
+        },
+        { status: 400 }
+      );
+    }
+
+    const { lastname, firstname, phone, email, note, serviceId, startAvailabilityId } = validationResult.data;
+
+    // Validation ObjectId
+    const serviceIdValidation = objectIdSchema.safeParse(serviceId);
+    const startAvailabilityIdValidation = objectIdSchema.safeParse(startAvailabilityId);
+    
+    if (!serviceIdValidation.success || !startAvailabilityIdValidation.success) {
+      return NextResponse.json(
+        { error: 'IDs invalides' },
         { status: 400 }
       );
     }
@@ -89,13 +114,6 @@ export async function POST(request: NextRequest) {
     }
 
     // Vérification de la disponibilité de départ (multi-slots)
-    if (!startAvailabilityId) {
-      return NextResponse.json(
-        { error: 'startAvailabilityId est requis' },
-        { status: 400 }
-      );
-    }
-
     const startSlot = await prisma.availability.findUnique({
       where: { id: startAvailabilityId },
     });
@@ -183,7 +201,7 @@ export async function POST(request: NextRequest) {
       return { ...newAppt, availabilities: bookedSlots };
     });
 
-    // Envoyer les emails de confirmation
+    // Ajouter les emails à la queue (asynchrone, non bloquant)
     const clientName = `${appointment.firstname} ${appointment.lastname}`;
     const serviceName = appointment.service.service;
     const appointmentDate = appointment.availabilities[0]?.date;
@@ -191,7 +209,7 @@ export async function POST(request: NextRequest) {
     // Email au client si une adresse email est fournie
     if (appointment.email) {
       try {
-        await sendAppointmentConfirmation({
+        await queueAppointmentConfirmation({
           to: appointment.email,
           clientName,
           serviceName,
@@ -199,7 +217,7 @@ export async function POST(request: NextRequest) {
           appointmentId: appointment.id,
         });
       } catch (emailError) {
-        console.error('Erreur lors de l\'envoi de l\'email au client:', emailError);
+        console.error('Erreur lors de l\'ajout de l\'email au client à la queue:', emailError);
         // Ne pas bloquer la création du RDV si l'email échoue
       }
     }
@@ -208,7 +226,7 @@ export async function POST(request: NextRequest) {
     const adminEmail = process.env.ADMIN_EMAIL;
     if (adminEmail) {
       try {
-        await sendNewAppointmentNotification({
+        await queueNewAppointmentNotification({
           adminEmail,
           clientName,
           clientPhone: appointment.phone,
@@ -218,7 +236,7 @@ export async function POST(request: NextRequest) {
           appointmentId: appointment.id,
         });
       } catch (emailError) {
-        console.error('Erreur lors de l\'envoi de l\'email à l\'admin:', emailError);
+        console.error('Erreur lors de l\'ajout de l\'email à l\'admin à la queue:', emailError);
         // Ne pas bloquer la création du RDV si l'email échoue
       }
     }

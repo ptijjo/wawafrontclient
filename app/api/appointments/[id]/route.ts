@@ -1,12 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { requireAuth } from '@/lib/auth-middleware';
+import { updateAppointmentSchema, objectIdSchema } from '@/lib/validations';
+import { apiRateLimiter, getRateLimitIdentifier, checkRateLimit } from '@/lib/rate-limit';
 
 // GET /api/appointments/[id] - Récupérer un rendez-vous par ID (authentification requise)
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  // Rate limiting
+  const identifier = getRateLimitIdentifier(request);
+  const rateLimitCheck = await checkRateLimit(apiRateLimiter, identifier);
+  if (!rateLimitCheck.success) {
+    return rateLimitCheck.response;
+  }
+
   const auth = await requireAuth(request);
 
   if (!auth.success) {
@@ -15,6 +24,15 @@ export async function GET(
 
   try {
     const { id } = await params;
+    
+    // Validation ObjectId
+    const idValidation = objectIdSchema.safeParse(id);
+    if (!idValidation.success) {
+      return NextResponse.json(
+        { error: 'ID invalide' },
+        { status: 400 }
+      );
+    }
 
     const appointment = await prisma.appointment.findUnique({
       where: { id },
@@ -49,6 +67,13 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  // Rate limiting
+  const identifier = getRateLimitIdentifier(request);
+  const rateLimitCheck = await checkRateLimit(apiRateLimiter, identifier);
+  if (!rateLimitCheck.success) {
+    return rateLimitCheck.response;
+  }
+
   const auth = await requireAuth(request);
 
   if (!auth.success) {
@@ -57,8 +82,31 @@ export async function PATCH(
 
   try {
     const { id } = await params;
+    
+    // Validation ObjectId
+    const idValidation = objectIdSchema.safeParse(id);
+    if (!idValidation.success) {
+      return NextResponse.json(
+        { error: 'ID invalide' },
+        { status: 400 }
+      );
+    }
+
     const body = await request.json();
-    const { lastname, firstname, phone, email, note, serviceId } = body;
+    
+    // Validation avec Zod
+    const validationResult = updateAppointmentSchema.safeParse(body);
+    if (!validationResult.success) {
+      return NextResponse.json(
+        { 
+          error: 'Données invalides',
+          details: validationResult.error.errors,
+        },
+        { status: 400 }
+      );
+    }
+
+    const { lastname, firstname, phone, email, note, serviceId } = validationResult.data;
 
     // Vérifier si le rendez-vous existe
     const existingAppointment = await prisma.appointment.findUnique({
@@ -75,6 +123,15 @@ export async function PATCH(
 
     // Si le service change, vérifier qu'il existe
     if (serviceId && serviceId !== existingAppointment.serviceId) {
+      // Validation ObjectId du service
+      const serviceIdValidation = objectIdSchema.safeParse(serviceId);
+      if (!serviceIdValidation.success) {
+        return NextResponse.json(
+          { error: 'ID de service invalide' },
+          { status: 400 }
+        );
+      }
+
       const service = await prisma.service.findUnique({
         where: { id: serviceId },
       });
@@ -128,6 +185,13 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  // Rate limiting
+  const identifier = getRateLimitIdentifier(request);
+  const rateLimitCheck = await checkRateLimit(apiRateLimiter, identifier);
+  if (!rateLimitCheck.success) {
+    return rateLimitCheck.response;
+  }
+
   const auth = await requireAuth(request);
 
   if (!auth.success) {
@@ -136,6 +200,15 @@ export async function DELETE(
 
   try {
     const { id } = await params;
+    
+    // Validation ObjectId
+    const idValidation = objectIdSchema.safeParse(id);
+    if (!idValidation.success) {
+      return NextResponse.json(
+        { error: 'ID invalide' },
+        { status: 400 }
+      );
+    }
 
     // Vérifier si le rendez-vous existe
     const existingAppointment = await prisma.appointment.findUnique({
